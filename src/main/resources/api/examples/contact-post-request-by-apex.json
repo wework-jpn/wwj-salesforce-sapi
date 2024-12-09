@@ -1,0 +1,30 @@
+{
+  "input": {
+    "email": "id.contact.test4@gmail.com",
+    "uuid": "41f50f52-0d41-4a08-85ea-56423b2803c8",
+    "first_name": "Johny4",
+    "last_name": "Walker4",
+    "status": "active",
+    "phone": "3101772614",
+    "kind": "Prospect",
+    "date_of_birth": "1990-04-09T15:45:44.358Z",
+    "lifecycle_event_type": "created",
+    "location_uuid": "22f50f52-0d41-4a08-85ea-56423b2803c8",
+    "building_sfdc_id": "aAd5x000000CakgCAC",
+    "locale_preference_or_default": "en",
+    "roles": [
+        "Member"
+    ],
+    "sign_in_count": 0,
+    "has_potential_seat": true,
+    "language_preference": "en_US",
+    "seats": [
+    {
+      "kind": "WeWork Employee",
+      "company_uuid": "13f50f52-0d41-4a08-85ea-56423b2803c3",
+      "billing_account_sfdc_id": "0017400000BiX6RAAV",
+      "status": "active"
+    }
+  ]
+    }
+}

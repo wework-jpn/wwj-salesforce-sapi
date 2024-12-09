@@ -1,0 +1,22 @@
+{
+			"Name": "WeWork Systems - Internal Account (DO NOT TOUCH)-BL-Atrium Tower-WW-Nov 13, 2023",
+			"Building_Legal_Name__c": "BL-Atrium Tower",
+			"Gross_Desks__c": 0,
+			"Net_Desks__c": 0,
+			"Net_TCV_Unweighted_Formula__c": 0,
+			"Gross_ACV__c": 0,
+			"Net_ACV_Unweighted__c": 0,
+			"Gross_TCV_Formula__c": 0,
+			"Gross_Term_TCV__c": 1,
+			"CloseDate": "2023-11-13",
+			"StageName": "Closed Won",
+			"Type__c": "WeWork",
+			"Referrer_Account__c": null,
+			"Segment__c": "Enterprise",
+			"Building__c": "aAd5x000000CarcCAC",
+			"RecordTypeId": "0125x000000YPitAAG",
+			"AccountId": "0015x00002Hqv2NAAR",
+			"Contract_Type__c": "New Business",
+			"Contract_Pdf__c": null,
+			"Id": "0052E00000KuAtxQAF"
+		}

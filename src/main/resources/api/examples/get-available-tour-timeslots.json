@@ -1,0 +1,50 @@
+{
+  "doPostOutput": {
+    "success": true,
+    "timeSlots": [
+      {
+        "territoryId": "0Hh5400000057xhCAA",
+        "startTime": "2022-02-22T08:30:00-0500",
+        "endTime": "2022-02-22T09:00:00-0500",
+        "serviceResourceId": "0Hn540000008gIOCAY",
+        "remainingAppointments": 1
+      },
+      {
+        "territoryId": "0Hh5400000057xhCAA",
+        "startTime": "2022-02-22T08:45:00-0500",
+        "endTime": "2022-02-22T09:15:00-0500",
+        "serviceResourceId": "0Hn540000008gIOCAY",
+        "remainingAppointments": 1
+      },
+      {
+        "territoryId": "0Hh5400000057xhCAA",
+        "startTime": "2022-02-22T09:00:00-0500",
+        "endTime": "2022-02-22T09:30:00-0500",
+        "serviceResourceId": "0Hn540000008gIOCAY",
+        "remainingAppointments": 1
+      },
+      {
+        "territoryId": "0Hh5400000057xhCAA",
+        "startTime": "2022-02-22T09:15:00-0500",
+        "endTime": "2022-02-22T09:45:00-0500",
+        "serviceResourceId": "0Hn540000008gIOCAY",
+        "remainingAppointments": 1
+      },
+      {
+        "territoryId": "0Hh5400000057xhCAA",
+        "startTime": "2022-02-22T09:30:00-0500",
+        "endTime": "2022-02-22T10:00:00-0500",
+        "serviceResourceId": "0Hn540000008gIOCAY",
+        "remainingAppointments": 1
+      },
+      {
+        "territoryId": "0Hh5400000057xhCAA",
+        "startTime": "2022-02-22T09:45:00-0500",
+        "endTime": "2022-02-22T10:15:00-0500",
+        "serviceResourceId": "0Hn540000008gIOCAY",
+        "remainingAppointments": 1
+      }
+    ],
+    "message": "Available time slots retrieved successfully"
+  }
+}

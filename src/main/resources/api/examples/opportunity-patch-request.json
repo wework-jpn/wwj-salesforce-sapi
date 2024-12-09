@@ -1,0 +1,27 @@
+[
+  {
+    "Id": "0060G00000rITD6QAO",
+    "Renewal_Prediction_Score__c": 8,
+    "Renewal_Prediction_Reason__c": "months_since_covid\nkeycard_swipes_change_from_fm\nmonths_since_ipo"
+  },
+  {
+    "Id": "0060G00000s8sElQAI",
+    "Renewal_Prediction_Score__c": 27,
+    "Renewal_Prediction_Reason__c": "tenure_months\nmonths_since_ipo\ncountry_covid19_confirmed_case_count_change_prev_month_per_capita"
+  },
+  {
+    "Id": "0060G00000udj6ZQAQ",
+    "Renewal_Prediction_Score__c": 28,
+    "Renewal_Prediction_Reason__c": "move_in_month_sales_interaction\nmonths_since_ipo\ncountry_covid19_confirmed_case_count_change_prev_month_per_capita"
+  },
+  {
+    "Id": "0060G00000ufLwtQAE",
+    "Renewal_Prediction_Score__c": 8,
+    "Renewal_Prediction_Reason__c": "months_since_covid\nmonths_since_ipo\ncountry_covid19_confirmed_case_count_change_prev_month_per_capita"
+  },
+  {
+    "Id": "0060G00000ugWnCQAU",
+    "Renewal_Prediction_Score__c": 7,
+    "Renewal_Prediction_Reason__c": "keycard_swipes_6m\nmonths_since_covid\nmonths_since_ipo\ncountry_covid19_confirmed_case_count_change_prev_month_per_capita"
+  }
+]

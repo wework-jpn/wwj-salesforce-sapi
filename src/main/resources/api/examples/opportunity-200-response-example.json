@@ -1,0 +1,28 @@
+[
+  {
+    "Account": "0010G00002CEAo0QAH",
+    "Description": null,
+    "IsClosed": true,
+    "CloseDate": "2016-09-23",
+    "Name": "Regalii-Office Space-Sep 23, 2016",
+    "Lead_Source_Detail__c": "Referral Web",
+    "OwnerId": "005F0000005PlyUIAS",
+    "Primary_Contact__c": null,
+    "USF_Quantity__c": null,
+    "Opportunity_Creation_Source__c": null,
+    "Building__c": "a00F000000MkxZzIAJ",
+    "Source_Id__c": null,
+    "Actual_Start_Date__c": "2016-10-01",
+    "Original_Quantity__c": 10.0,
+    "StageName": "Closed Won",
+    "IsRenewalOpportunity__c": false,
+    "Primary_Member__c": "0030G00002Owk6qQAB",
+    "LeadSource": "Referral",
+    "CreatedDate": "2016-09-19T14:24:04.000Z",
+    "Main_Contact_ID__c": "0030G00002Owk6q",
+    "LeadSource_Sub_Type__c": "Member Referral",
+    "UOM__c": null,
+    "Id": "0060G00000lmIYZQA2",
+    "Interested_in_Number_of_Desks__c": 12.0
+  }
+]

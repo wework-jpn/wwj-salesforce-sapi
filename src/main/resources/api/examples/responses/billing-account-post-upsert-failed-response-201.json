@@ -1,0 +1,17 @@
+[
+  {
+    "created": false,
+    "success": false,
+    "id": null,
+    "errors": [
+      {
+        "duplicateResult": null,
+        "message": "ID Status: value not of required type: true",
+        "fields": [
+          "ID_Status__c"
+        ],
+        "statusCode": "INVALID_TYPE_ON_FIELD_IN_RECORD"
+      }
+    ]
+  }
+]

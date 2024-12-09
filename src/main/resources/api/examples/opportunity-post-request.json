@@ -1,0 +1,23 @@
+{
+    "Source_Id__c": "null",
+    "AccountId": "null",
+    "Description": "null",
+    "Actual_Start_Date__c": "2021-07-31",
+    "Original_Quantity__c": 10,
+    "StageName": "Qualification",
+    "Primary_Member__c": "0030300000L6K37AAF",
+    "IsClosed": false,
+    "CloseDate": "2021-06-30",
+    "Name": "TestOpp",
+    "Lead_Source_Detail__c": "null",
+    "LeadSource": "null",
+    "OwnerId": "00503000000zrxYAAQ",
+    "CreatedDate": "2021-06-01T22:07:59.000Z",
+    "LeadSource_Sub_Type__c": "null",
+    "USF_Quantity__c": 35,
+    "Opportunity_Creation_Source__c": "null",
+    "Building__c": "a5G030000000KYLEA2",
+    "Interested_in_Number_of_Desks__c": 14,
+    "Desired_Term_Length_in_months__c": 1,
+    "Type__c": "WeWork"
+}

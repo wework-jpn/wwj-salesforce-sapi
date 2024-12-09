@@ -1,0 +1,58 @@
+[
+  {
+    "Office_Work_Station_Number__c": "07-101",
+    "Last_Move_In__c": null,
+    "Notes__c": null,
+    "Next_Move_In__c": null,
+    "Monthly_Price__c": "90340.0",
+    "UUID__c": "91a7fc75-4acf-4403-9e49-c1d98c464a48",
+    "type": "Reservable__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "Two Embarcadero Center - 07-101 (78)",
+    "Building__r": {
+      "UUID__c": "913826af-14e7-46d9-aa0d-9e0c21b4ece0",
+      "Id": null,
+      "type": "Building__c"
+    },
+    "Open_Date__c": "2017-02-01",
+    "Office_Capacity__c": "78.0",
+    "Physical_Desk_Count__c": "78.0",
+    "Status_Right_Now__c": "Unoccupied",
+    "Archived_On__c": null,
+    "Floor__c": "7",
+    "Next_Move_Out__c": null,
+    "Id": "a0E0G00000wpwQjUAI",
+    "Space_UUID__c": null,
+    "Status__c": "Available",
+    "Last_Move_Out__c": null,
+    "Office_Work_Station_Type__c": "Office"
+  },
+  {
+    "Office_Work_Station_Number__c": "HD111",
+    "Last_Move_In__c": "2017-04-26",
+    "Notes__c": null,
+    "Next_Move_In__c": null,
+    "Monthly_Price__c": "542.0",
+    "UUID__c": "37949f1e-39bd-44f0-acdb-e6e4d9145265",
+    "type": "Reservable__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "Two Embarcadero Center - HD111 (1)",
+    "Building__r": {
+      "UUID__c": "913826af-14e7-46d9-aa0d-9e0c21b4ece0",
+      "Id": null,
+      "type": "Building__c"
+    },
+    "Open_Date__c": "2017-02-01",
+    "Office_Capacity__c": "1.0",
+    "Physical_Desk_Count__c": null,
+    "Status_Right_Now__c": "Occupied",
+    "Archived_On__c": null,
+    "Floor__c": "8",
+    "Next_Move_Out__c": null,
+    "Id": "a0E0G00000wpwQkUAI",
+    "Space_UUID__c": "cde824e2-e6be-4cc1-b492-de7dc5355650",
+    "Status__c": "Unavailable",
+    "Last_Move_Out__c": null,
+    "Office_Work_Station_Type__c": "HotDesk"
+  }
+]

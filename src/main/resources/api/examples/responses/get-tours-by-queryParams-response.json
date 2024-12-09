@@ -1,0 +1,48 @@
+[
+  {
+    "Status": "Scheduled",
+    "Owner": {
+      "FirstName": "Nataliia",
+      "Id": null,
+      "LastName": "Parolia",
+      "type": "Name"
+    },
+    "Email": "toursmoketest@tester.com",
+    "Lead_Source__c": null,
+    "Tour_Notes__c": null,
+    "SchedStartTime": "2022-03-18T14:00:00.000Z",
+    "Contact": {
+      "FirstName": "Tour-smoke",
+      "Account_Name__c": "Best Rodeo Ever Show User ????",
+      "Id": null,
+      "LastName": "Test",
+      "type": "Contact"
+    },
+    "SchedEndTime": "2022-03-18T14:30:00.000Z",
+    "Lead_Source_Detail__c": null,
+    "Phone": null,
+    "Lead_Source_Subtype__c": null,
+    "Id": "08p540000000iriAAA",
+    "Interested_in_Number_of_Desks__c": "100.0"
+  },
+  {
+    "Status": "Scheduled",
+    "Owner": {
+      "FirstName": "Nataliia",
+      "Id": null,
+      "LastName": "Parolia",
+      "type": "Name"
+    },
+    "Email": "toursmoketest@tester.com",
+    "Lead_Source__c": null,
+    "Tour_Notes__c": null,
+    "SchedStartTime": "2022-03-18T13:15:00.000Z",
+    "Contact": {
+      "FirstName": "Tour-smoke",
+      "Account_Name__c": "Best Rodeo Ever Show User ????",
+      "Id": null,
+      "LastName": "Test",
+      "type": "Contact"
+    }
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "UUID__c": "43b93a5e-9522-46c3-982b-9ad742ada28e",
+    "Applied_Months__c": "0.00",
+    "Contract_Kind__c": null,
+    "Membership_Agreement_Uuid__c": "083377ce-bf88-4216-82a3-603a496b1ed5",
+    "Price__c": "900.00",
+    "Product_Uuid__c": null,
+    "Promotion_Code__c": null,
+    "Quantity__c": "1.00",
+    "Inventory_Type__c": "Resource",
+    "End_Date__c": "2021-10-19",
+    "Start_Date__c": "2021-10-19",
+    "Type__c": "New Add-on",
+    "Units_Changed__c": 1,
+    "Record_Local_Value__c": "0.00",
+    "CurrencyIsoCode": "BRL",
+    "Reservation_Uuid__c": "7490c5c9-761e-496e-9e18-d9573c20f2ea",
+    "Opportunity__c": null,
+    "billing_account__r": {
+      "type": "account",
+      "uuid__c": "2e6b4b80-1aef-0139-0cd8-7ec93a740a23"
+    },
+    "inventory__r": {
+      "type": "inventory__c",
+      "uuid__c": "fbc34350-8e96-0130-e5b8-160ad023c11e"
+    },
+    "Primary_Reservation__r": {
+      "type": "Reservation__c",
+      "uuid__c": "3fe0dad2-1495-4306-91e5-5c76e83050ad"
+    },
+    "building__r": {
+      "type": "building__c",
+      "uuid__c": "cf703d32-5d66-45ac-8077-c2d55249acab"
+    }
+  }
+]

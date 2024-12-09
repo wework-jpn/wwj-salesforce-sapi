@@ -1,0 +1,69 @@
+{
+  "membership_agreement_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+  "company_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+  "primary_member_email": "john.smith@somewebsite.com",
+  "community_manager_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+  "contract_pdf": "test.pdf",
+  "move_ins": [
+    {
+      "reservable_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+      "building_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+      "price": 12500,
+      "quantity": 10,
+      "start_date": "2019-06-01",
+      "reservation_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+      "commitment": {
+        "start_date": "2019-06-01",
+        "end_date": "2019-06-01",
+        "number_of_months": 30
+      }
+    }
+  ],
+  "move_outs": [
+    {
+      "reservable_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+      "building_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+      "price": 12500,
+      "quantity": 10,
+      "start_date": "2019-06-01",
+      "reservation_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+      "commitment": {
+        "start_date": "2019-06-01",
+        "end_date": "2019-06-01",
+        "number_of_months": 30
+      }
+    }
+  ],
+  "products": [
+    {
+      "product_code": "PROF-000900",
+      "quantity": 10,
+      "unit_price": 12500,
+      "total_price": 12500,
+      "building_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+      "start_date": "2019-06-01"
+    }
+  ],
+  "original_contract_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+  "currencyVal": "USD",
+  "event_name": "Event",
+  "opportunity_id": "0030G00002qOm9pQAC",
+  "downgrade_reason": "Downgrade Reason",
+  "downgrade_notes": "Some notes",
+  "transfer_type": "New Business",
+  "contract_date": "2019-06-01",
+  "discounts": [
+    {
+      "start_date": "2019-06-01",
+      "end_date": "2019-06-01",
+      "building_uuid": "781280c0-96ed-4277-a93f-d7152a648e3e",
+      "amount": 12500
+    }
+  ],
+  "contract_expires_at": "2019-06-01 21:15:47",
+  "from_opportunity": "0030G00002qOm9pQAC",
+  "partial_cancel": "2019-06-01 21:15:47",
+  "lead_source": "WeWork.com",
+  "lead_source_detail": "Global Contact CTA",
+  "notice_period": 3
+}

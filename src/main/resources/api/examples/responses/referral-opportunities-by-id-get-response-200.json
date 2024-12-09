@@ -1,0 +1,78 @@
+[
+  {
+    "Contract_UUID__c": null,
+    "Account": {
+      "Owner": {
+        "Id": null,
+        "type": "User",
+        "Name": "QA Inside Sales (Sales rep)"
+      },
+      "Id": null,
+      "type": "Account",
+      "Name": "Best Western Inn Convention:Best Western Inn Convention"
+    },
+    "Owner": {
+      "Id": null,
+      "type": "User",
+      "Name": "QA WW Support & Op"
+    },
+    "AccountId": "0015400000mk0A6AAI",
+    "type": "Opportunity",
+    "Referrer__c": "0035400000krStXAAU",
+    "CloseDate": "2022-02-18",
+    "Name": "Best Western Inn Convention:Best Western Inn Convention-100 University Ave-Feb 18, 2022",
+    "Building__r": {
+      "Region_Name__c": "India",
+      "Building_ID__c": "c32ad889-9769-42e8-b295-ef5ac6b2ea37",
+      "Id": null,
+      "type": "Building__c"
+    },
+    "Territory_Name__c": "Canada",
+    "RecordType": {
+      "Id": null,
+      "type": "RecordType",
+      "DeveloperName": "New_Business",
+      "Name": "New Business"
+    },
+    "Referrer_Account__r": {
+      "Id": null,
+      "type": "Account",
+      "Name": "Account22"
+    },
+    "Net_TCV__c": 29726.0,
+    "Referrer__r": {
+      "Owner": {
+        "Email": "nataliia.parolia@wework.com",
+        "Id": null,
+        "type": "User",
+        "Name": "Nataliia Parolia"
+      },
+      "Email": "contacttest19@test.com",
+      "Type__c": "Broker",
+      "Id": null,
+      "type": "Contact",
+      "Name": "Contact Test19"
+    },
+    "Locations_Interested__c": "100 University Ave;CAN-Yuexiu Financial Building",
+    "Contract_Stage__c": null,
+    "Actual_Start_Date__c": "2022-02-24",
+    "StageName": "Closed Won",
+    "Billing_Account__r": null,
+    "Referrer_Account__c": "0015400000hbAVCAA2",
+    "Primary_Member__c": "0035400000mXQftAAG",
+    "Net_Desks__c": 89.0,
+    "Term__c": 1.0,
+    "CurrencyIsoCode": "CAD",
+    "Contract_Pdf__c": null,
+    "Building_uuid__c": "21abf987-1328-41cf-a45c-cbc5829cacfd",
+    "Id": "0065400000FwuvlAAB",
+    "Interested_in_Number_of_Desks__c": 89.0,
+    "Primary_Member__r": {
+      "Email": "leads18@invalid.com",
+      "Id": null,
+      "type": "Contact",
+      "Name": "Lead S18"
+    },
+    "IsRenewalOpportunity__c": false
+  }
+]

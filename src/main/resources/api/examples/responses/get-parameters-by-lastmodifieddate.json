@@ -1,0 +1,32 @@
+[
+  {
+    "Account": "0010G00002CEAo0QAH",
+    "CloseDate": "2016-09-23",
+    "Lead_Source_Detail__c": "Referral Web", 
+    "StageName": "Closed Won",
+    "LeadSource": "Referral",
+    "LeadSource_Sub_Type__c": "Member Referral",
+    "Id": "0060G00000lmIYZQA2",
+    "GACLIENTID__c": "1502086417.1583233224",
+    "GATRACKID__c":"UA-4260314-5",
+    "Opportunity_Account_Name__c": "Georgetown University",
+    "utm_campaign__c" : "l-nyc-branded_geo",
+    "utm_content__c": "c_exp",
+    "utm_medium__c": "cpc",
+    "utm_term__c": "wework",
+    "Portfolio_Name__c": "London",
+    "ROE_Segment__c": "Consumer",
+    "No_of_Desks_gross__c" : "4.0",
+    "Product_Group__c": "WeWork",
+    "Number_of_Closed_Tour__c":"0.0",
+    "Gross_ACV__c":"0.0",
+    "Broker_Involvement_Indicated__c": "Yes",
+    "utm_campaign_id__c":"23842626064130285",
+    "Building_Name__c":"DEN-The Lab",
+    "Gross_TCV__c":"5856.12",
+    "TCV_Default_Currency__c":"USD",
+    "Clean_URL__c":"null",
+    "Number_of_Completed_Tour__c":"null",
+    "GASESSIONID__c":"null"
+  }
+]

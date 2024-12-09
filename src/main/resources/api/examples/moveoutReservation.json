@@ -1,0 +1,15 @@
+{
+            "reservable_uuid": "ca04dfa5-b8f4-4c80-b36e-f9547a23f654",
+            "building_uuid": "267a97e4-3687-4114-b2ec-40777918b22a",
+            "price": 149000.0,
+            "quantity": 1,
+            "move_out_date": "2023-05-31",
+            "reservation_uuid": "71d6788e-b0f8-4d88-b7ba-64643447f2c2",
+			"contract_date": "2023-05-26",
+			"currencyVal": "KRW",
+			"membership_agreement_uuid": "c2f0f5d8-04de-48f4-971f-94458354a65a",
+			"company_uuid": "a3e4c740-b5d7-013b-cdc8-4aa445385f9e",
+			"downgrade_reason": "Downsizing or closing the business",
+			"downgrade_notes": null,
+			"contract_pdf": "https://spacemoney-prod-uploads.s3.amazonaws.com/uploads/signed/761972ec74a806acface3d917c9805f5eeff27b2876931b76e2bbd1cd41159ea.pdf"
+        }

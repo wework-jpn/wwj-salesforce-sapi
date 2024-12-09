@@ -1,0 +1,9 @@
+[
+  {
+    "Id": "USA",
+    "UUID__c": "913826af-14e7-46d9-aa0d-9e0c21b4ece0",
+    "Is_Tourable__c": true,
+    "Building_Status__c": "Opened",
+    "Contract_Status__c": "active_contract"
+  }
+]

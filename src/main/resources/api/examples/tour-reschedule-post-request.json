@@ -1,0 +1,9 @@
+{
+ "start_time": "2022-02-10T09:00:00.000",
+ "end_time": "2022-02-10T09:30:00.000",
+ "notes": "Need to reschedule",
+ "building_id": "21abf987-1328-41cf-a45c-cbc5829cacfd",
+ "booked_by_contact_id": "0030G00002qOm9pQAC",
+ "service_resource_id" : "0Hn540000008gIOCAY",
+ "tour_format": "In-Person"
+}

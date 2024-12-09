@@ -1,0 +1,12 @@
+[{"Net_TCV_unweighted__c":"261000.00",
+"Gross_TCV__c":"261000.00",
+"TCV_Default_Currency__c":"BRL",
+"Net_TCV_Local_Payload__c":"261000.00",
+"ACV_Gross__c":"237600.00",
+"ACV_Net__c":"237600.00",
+"Discount_Gross__c":"0.00",
+"Addon_Gross__c":"0.00",
+"tcv_gross_salesrecords_uuids__c":"e3a1c4b8-98ff-462a-b09b-f0096ca50a34,95ee6817-8f59-4868-911e-bb759f701dc2",
+"tcv_net_salesrecords_uuids__c":"e3a1c4b8-98ff-462a-b09b-f0096ca50a34,95ee6817-8f59-4868-911e-bb759f701dc2",
+"tcv_addons_salesrecords_uuids__c":"62f6ec63-78bf-44d0-832a-987fe2319075,09b9e71b-e737-4f89-9a89-64c2eb3154e0",
+"Id":"number"}]

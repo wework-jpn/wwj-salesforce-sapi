@@ -1,0 +1,52 @@
+[
+  {
+    "Started_On__c": "2017-03-01",
+    "Reservable__c": "a0E0G00000wpwQjUAI",
+    "Ended_On__c": "2019-06-30",
+    "Billing_Account__c": "a450G000000ZW3IQAW",
+    "Reservation_Status__c": "ended",
+    "UUID__c": "00a1f67a-423c-4886-8d93-f9f7ae06c2a9",
+    "Id": "a0T2I00000JHLjnUAH",
+    "type": "Reservation__c"
+  },
+  {
+    "Started_On__c": "2017-02-01",
+    "Reservable__c": "a0E0G00000wpwQjUAI",
+    "Ended_On__c": "2017-02-28",
+    "Billing_Account__c": "a450G000000ZW3IQAW",
+    "Reservation_Status__c": "ended",
+    "UUID__c": "ae7e9cd8-d99b-4061-bb6b-5323e8909b7e",
+    "Id": "a0T2I00000JHcs7UAD",
+    "type": "Reservation__c"
+  },
+  {
+    "Started_On__c": "2019-07-01",
+    "Reservable__c": "a0E0G00000wpwQjUAI",
+    "Ended_On__c": "2019-12-31",
+    "Billing_Account__c": "a452I000000woN2QAI",
+    "Reservation_Status__c": "ended",
+    "UUID__c": "1d1cd2c3-595c-42e4-8136-8f49a03c3b79",
+    "Id": "a0T2I00000ZivfoUAB",
+    "type": "Reservation__c"
+  },
+  {
+    "Started_On__c": "2020-01-01",
+    "Reservable__c": "a0E0G00000wpwQjUAI",
+    "Ended_On__c": "2020-12-31",
+    "Billing_Account__c": "a452I000000Oaa0QAC",
+    "Reservation_Status__c": "ended",
+    "UUID__c": "d73c5376-355f-4c59-bfae-129eae6fa52d",
+    "Id": "a0T2I00000eZBagUAG",
+    "type": "Reservation__c"
+  },
+  {
+    "Started_On__c": "2020-01-01",
+    "Reservable__c": "a0E0G00000wpwQjUAI",
+    "Ended_On__c": null,
+    "Billing_Account__c": "a452I000000Oaa0QAC",
+    "Reservation_Status__c": "inactive",
+    "UUID__c": "b948c14f-0ec8-4c80-819d-2c78c88dd3bd",
+    "Id": "a0T2I00000eYytjUAC",
+    "type": "Reservation__c"
+  }
+]

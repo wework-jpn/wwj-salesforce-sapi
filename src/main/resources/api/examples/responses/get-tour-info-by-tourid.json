@@ -1,0 +1,10 @@
+[
+  {
+    "Status": "Cancelled",
+    "Building_Id__c": "a3u54000000GXqDAAW",
+    "SchedStartTime": "2022-02-08T18:00:00.000Z",
+    "SchedEndTime": "2022-02-08T18:30:00.000Z",
+    "Id": "08p540000009ynEAAQ",
+    "type": "ServiceAppointment"
+  }
+]
