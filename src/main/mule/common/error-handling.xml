@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+	
+		<error-handler name="APIKIT-Error-Handler">
+		
+            <on-error-propagate type="APIKIT:BAD_REQUEST,HTTP:BAD_REQUEST" enableNotifications="true" logException="true">
+			<logger level="INFO" doc:name="Log Start Bad Request Error" doc:id="f65edaa9-67f2-4141-9804-1795cc1a7fed" message="Log Start Bad Request Error" />
+			<ee:transform doc:name="Bad Request Error">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: "400",
+	errorMessage: error.description,
+	transactionId: correlationId
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="Log End Bad Request Error" doc:id="70d67a76-be11-4ec0-b0c0-ab9a91b6d271" message="Log End Bad Request Error" />
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND,HTTP:NOT_FOUND" enableNotifications="true" logException="true">
+			<logger level="INFO" doc:name="Log Start Not Found Error" doc:id="5838e785-c9cc-4b34-ae7e-cabe10b3e2b6" message="Log Start Not Found Error" />
+			<ee:transform doc:name="Not Found Error">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: "404",
+	errorMessage: error.description,
+	transactionId: correlationId
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="Log End Not Found Error" doc:id="0025322d-7162-4b89-8578-b9d7db08b9e0" message="Log End Not Found Error" />
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED,HTTP:METHOD_NOT_ALLOWED" enableNotifications="true" logException="true">
+			<logger level="INFO" doc:name="Log Start Method Not Allowed Error" doc:id="815ab23e-6cc4-46a3-afd4-1219456204a4" message="Log Start Method Not Allowed Error" />
+			<ee:transform doc:name="Method Not Allowed Error">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: "405",
+	errorMessage: error.description,
+	transactionId: correlationId
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="Log End Method Not Allowed Error" doc:id="09ad57f6-6a45-493e-b0eb-009379280513" message="Log End Method Not Allowed Error" />
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE,HTTP:NOT_ACCEPTABLE" enableNotifications="true" logException="true">
+			<logger level="INFO" doc:name="Log Start Not Acceptable Error" doc:id="df01ffa1-29c5-47bc-9877-1109e9f7f9a4" message="Log Start Not Acceptable Error" />
+			<ee:transform doc:name="Not Acceptable Error">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: "406",
+	errorMessage: error.description,
+	transactionId: correlationId
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="Log End Not Acceptable Error" doc:id="2cad911a-357c-4e6c-9e23-080d17c65470" message="Log End Not Acceptable Error" />
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE, HTTP:UNSUPPORTED_MEDIA_TYPE" enableNotifications="true" logException="true">
+			<logger level="INFO" doc:name="Log Start Unsupported Media Type Error" doc:id="6c9ea6c4-c7c3-4839-89b5-db6e219382c6" message="Log Start Unsupported Media Type Error" />
+			<ee:transform doc:name="Unsupported Media Type Error">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: "415",
+	errorMessage: error.description,
+	transactionId: correlationId
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="Log End Unsupported Media Type Error" doc:id="92f885ad-aa5f-402e-8e72-20937e89f310" message="Log End Unsupported Media Type Error" />
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED" enableNotifications="true" logException="true">
+			<logger level="INFO" doc:name="Log Start Not Implemented Error" doc:id="13e6ac88-2ddd-49a5-831f-2ad26fc233e3" message="Log Start Not Implemented Error" />
+			<ee:transform doc:name="Not Implemented Error">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: "501",
+	errorMessage: error.description,
+	transactionId: correlationId
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[501]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="Log End Not Implemented Error" doc:id="18053cc6-6250-497e-82a8-03dd514c8cb8" message="Log End Not Implemented Error" />
+            </on-error-propagate>
+
+	<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="aac86656-4f40-4662-92d2-ec632e19c754" type="ANY">
+			<logger level="INFO" doc:name="Log Start Internal Server Error" doc:id="fd83cf8c-cb9b-417a-9745-2672e317f92e" message="Log Start Internal Server Error" />
+			<ee:transform doc:name="Internal Server Error" doc:id="efd7341e-0a94-4c73-9c52-f4fe83817cb8" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: "500",
+	errorMessage: error.description,
+	transactionId: correlationId
+}]]></ee:set-payload>		
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Log End Internal Server Error" doc:id="7f7ce1fe-1f70-4532-86b6-47a1d8af208d" message="Log End Internal Server Error" />
+	</on-error-propagate>
+	
+	</error-handler>
+</mule>

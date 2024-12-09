@@ -1,0 +1,9 @@
+kcertificates:
+  keystore:
+    password: "![]"
+
+sf:
+  consumer-key: "![]"
+  consumer-secret: "![]"
+  password: "![]"
+  

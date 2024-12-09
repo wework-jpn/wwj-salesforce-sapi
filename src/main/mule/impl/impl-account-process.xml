@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<sub-flow name="get-account-search-subflow" doc:id="8d733fbe-caee-455d-a849-46b3a6b43231" >
+		<json-logger:logger doc:name="Log Start GET Account with Query Parameters Flow" doc:id="bd4947e4-80b0-4c7f-842e-1aa20d4bf611" config-ref="JSON_Logger_Config" message="Log Start GET Account with Query Parameters Flow"/>
+		<choice doc:name="Check Query Parameter Value" doc:id="24c0b87d-c41c-4a84-9c37-6144a84844c7" >
+			<when expression="#[attributes.queryParams.'Name' == null and attributes.queryParams.'UUID__c' == null]" >
+				<set-payload value="#[[]]" doc:name="Set Payload" doc:id="69c22f8c-cce9-4eb6-bab2-5e506d5bccfc" />
+			</when>
+			<when expression="#[attributes.queryParams.RecordTypeId != null]">
+				<ee:transform doc:name="Query Account Search by RecordTypeId" doc:id="1b9256fa-b5e4-48c3-854b-ad0add9b538d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+
+fun search_statements(a,b,c) = [
+	if(a=='null') "Name = null" else if (!isBlank(a)) "Name = ':name'" else "",
+	if(b=='null') "UUID__c = null" else if(!isBlank(b)) "UUID__c = ':uuid'" else "",
+	if ( !isBlank(c)) "RecordTypeId = ':RecordTypeId'" else ""
+	] filter $ != "" joinBy " AND "
+
+---
+"SELECT Id,UUID__c, Name,Active__c,Duplicate_status__c,Account_Type__c, ID_Status__c,ParentId, Primary_Member__c FROM Account WHERE " ++
+search_statements(attributes.queryParams.'Name' default "",attributes.queryParams.'UUID__c' default "",attributes.queryParams.'RecordTypeId'  default "")]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<salesforce:query doc:name="SELECT Account by RecordTypeId" doc:id="a099f519-5675-4d26-81f5-2dd0d807c5d3" config-ref="Salesforce_Config">
+					<salesforce:salesforce-query ><![CDATA[#[payload]]]></salesforce:salesforce-query>
+					<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	name : attributes.queryParams.'Name' default "",
+	uuid : attributes.queryParams.'UUID__c' default "",
+	RecordTypeId: attributes.queryParams.'RecordTypeId' default ""
+}]]]></salesforce:parameters>
+				</salesforce:query>	
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Query Account Search by Name &amp; UUID__c" doc:id="a8b08e9c-7766-42fa-9995-6f256a51fec5" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+
+fun search_statements(a,b) = [
+	if ( !isBlank(a)) "Name = ':name'" else "",
+	if ( !isBlank(b)) "UUID__c = ':uuid'" else ""
+	] filter $ != "" joinBy " AND "
+
+---
+"SELECT Id, Name, Ultimate_Parent_Org__c, Phone, ParentId, Primary_Member__c, Number_of_Full_Time_Employees__c, Lead_Source__c, LeadSource_Sub_Type__c, UUID__c FROM Account WHERE " ++
+search_statements(attributes.queryParams.'Name' default "", attributes.queryParams.'UUID__c'  default "")]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<salesforce:query doc:name="SELECT Account by Name or UUID__c" doc:id="75efd3de-8158-480f-bd4b-74e86476f5f5" config-ref="Salesforce_Config">
+					<salesforce:salesforce-query ><![CDATA[#[payload]]]></salesforce:salesforce-query>
+					<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	name : attributes.queryParams.'Name' default "",
+	uuid : attributes.queryParams.'UUID__c' default ""
+}]]]></salesforce:parameters>
+				</salesforce:query>
+			</otherwise>
+		</choice>
+		<choice doc:name="Payload has value?" doc:id="22a78736-4b70-49c1-a9d0-9725f1ac42b0" >
+			<when expression="#[sizeOf(payload) &gt; 0]" >
+				<ee:transform doc:name="Response Payload" doc:id="346ff16d-70ad-4dde-8e96-d6d9f269316e" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map() -> $ - "type"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<json-logger:logger doc:name="Log Response for Account with specified parameters" doc:id="95c490ae-43c0-4368-b3ad-e8f2811cf52e" config-ref="JSON_Logger_Config" message="Response for Account with specified parameters" tracePoint="END" />
+			</when>
+			<otherwise >
+				<ee:transform doc:name="204 Empty content" doc:id="9db27217-118f-411c-a811-f0584cb0d4bb" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[204]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<json-logger:logger doc:name="Log Empty Payload" doc:id="06a3e437-7dd6-4be4-b761-4005484b8eaf" config-ref="JSON_Logger_Config" message="Log Empty Payload" tracePoint="END">
+					<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: {}
+}]]]></json-logger:content>
+				</json-logger:logger>
+			</otherwise>
+		</choice>
+		<json-logger:logger doc:name="Log End GET Account with Query Parameters Flow" doc:id="46eeed95-2264-4332-9166-5471ca5f6fe5" config-ref="JSON_Logger_Config" message="Log End GET Account with Query Parameters Flow" />
+	</sub-flow>
+	
+	<sub-flow name="post-account-create-subflow" doc:id="ebb5067f-8934-46c7-bdc3-d159378dc0d8" >
+		<json-logger:logger doc:name="Log Start POST Account Create Flow" doc:id="7a2366e5-144f-49ec-afe0-a75da63aa4e6" config-ref="JSON_Logger_Config" message="Log Start POST Account Create Flow" tracePoint="AFTER_REQUEST"/>
+		<salesforce:create doc:name="Create Account" doc:id="ff99a15f-91f3-4715-887c-c2a8d6666643" config-ref="Salesforce_Config" type="Account_Contact_Relation_Setting__mdt">
+			<salesforce:records ><![CDATA[#[[payload]]]]></salesforce:records>
+		</salesforce:create>
+		<flow-ref doc:name="common-response-subflow" doc:id="7ed04767-7a1c-4176-a45b-abd90e8ac4dc" name="common-response-subflow"/>
+		<json-logger:logger doc:name="Log payload after creation" doc:id="74a5ad77-7ba0-4cf4-9a53-2d4703785ac2" config-ref="JSON_Logger_Config" message="Log payload after creation" tracePoint="AFTER_REQUEST"/>
+		<choice doc:name="Successful creation?" doc:id="e785ff69-4c44-41ee-a408-84549494cf1c" >
+			<when expression="#[payload[0].success == false]">
+				<raise-error doc:name="Raise error" doc:id="33fe5639-579c-4f5b-8ab3-7f625b10048d" type="APP:CUSTOM"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Set Account Id" doc:id="73df5d10-5e22-4b1f-82f7-01ba5f6d33e0" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	Id: payload[0].id
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<json-logger:logger doc:name="Log End POST Account Create Flow" doc:id="4afb7f90-f883-4a50-9388-55c9a14d7a80" config-ref="JSON_Logger_Config" message="Log End POST Account Create Flow" tracePoint="AFTER_REQUEST" />
+	</sub-flow>
+	
+	<sub-flow name="get-account-company-manager-subflow" doc:id="286bffa2-e04b-4d26-850c-7d6a6393d8c6" >
+		<json-logger:logger doc:name="Log Start GET Account Company Manager Flow" doc:id="e41e1e46-8a21-47a0-9c76-9b77811ae7ff" config-ref="JSON_Logger_Config" message="Log Start GET Account Company Manager Flow" tracePoint="BEFORE_REQUEST">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: "GET Account Company Manager SF request initiated"
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="var company_uuid" doc:id="921deds42-89d8-4e3b-b70d-5ccadc53ea42">
+			<ee:variables>
+				<ee:set-variable variableName="company_uuid"><![CDATA[attributes.uriParams.'company_uuid']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<salesforce:query doc:name="Query Account Manager" doc:id="e3f65ea5-f2af-4502-9825-fd923eed641c" config-ref="Salesforce_Config" target="account">
+			<salesforce:salesforce-query ><![CDATA[${query.accounts.manager-account}]]></salesforce:salesforce-query>
+		<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	"company_uuid" : vars.company_uuid default ""
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<json-logger:logger doc:name="Log Account Company Manager SF Processed" doc:id="1e9cd3b5-1efb-4449-85f0-8f25b1618d4c" config-ref="JSON_Logger_Config" message="Log Account Company Manager SF Processed" tracePoint="AFTER_REQUEST">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: "GET Account SF request processed successfully"
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<json-logger:logger doc:name="Log Start GET User" doc:id="3a777f2e-3433-44e7-b04d-ed3f6a08677b" config-ref="JSON_Logger_Config" message="Log Start GET User" tracePoint="BEFORE_REQUEST">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: "GET User SF Request Created"
+ }]]]></json-logger:content>
+		</json-logger:logger>
+		<salesforce:query doc:name="Query User" doc:id="d00e5981-51fd-40a2-9893-06f7d6048558" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[${query.accounts.manager-user}]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	"Account_Manager_Lookup__c" : vars.account.Account_Manager_Lookup__c[0] default ""
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<json-logger:logger doc:name="Log End GET User" doc:id="00bccd6a-cca3-4786-85f5-96943ed2002f" config-ref="JSON_Logger_Config" message="Log End GET User" tracePoint="AFTER_REQUEST">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: "GET User SF Request Processed Successfully"
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Response Payload" doc:id="4600557a-591c-40d2-a895-bbce1a029384" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  accountManagerName: payload.Name[0] default "",
+  accountShortCode: vars.account.Member_Short_Code__c[0] default ""
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	
+	<sub-flow name="get-account-shortcode-subflow" doc:id="4456ddc3-90b8-495f-bc95-4d2d11a43262" >
+		<json-logger:logger doc:name="Log Start GET Account Shortcode Flow" doc:id="4f48c41e-9f04-4fc9-9bf4-7601612269ae" config-ref="JSON_Logger_Config" message="Log Start GET Account Shortcode Flow" tracePoint="BEFORE_REQUEST">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload:"GET request to SF Account Object for shortcode details initiated"
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="var accountid" doc:id="808c6aef-58c5-43cb-a6a2-1bcf3177482d">
+			<ee:variables>
+				<ee:set-variable variableName="accountid"><![CDATA[attributes.uriParams.'accountid']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<salesforce:query doc:name="Query Account Shortcode" doc:id="866911b5-5186-45e5-8834-27f20863cf4f" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[${query.accounts.shortcode}]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+"accountid": vars.accountid default ""]]]></salesforce:parameters>
+		</salesforce:query>
+		<json-logger:logger doc:name="Log End GET Account Shortcode Flow" doc:id="21133d7a-e9a9-4feb-82e1-0f5aaf642544" config-ref="JSON_Logger_Config" message="Log End GET Account Shortcode Flow" tracePoint="BEFORE_REQUEST">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload:"GET request to SF Account Object for shortcode details initiated"
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Response Payload" doc:id="fe05c03d-1f36-4d0f-b42d-7119aaa5dcb9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  accountShortCode: payload.Member_Short_Code__c[0] default ""
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	
+	<sub-flow name="put-accounts-subflow"
+		doc:id="88e4b5a3-bb5a-4bb6-bbf2-0b4bccbec92e">
+		<json-logger:logger doc:name="Log Start PUT Accounts Flow"
+			config-ref="JSON_Logger_Config"
+			doc:id="56aa971c-0313-4c5a-9ffc-8d064d42f040"
+			message="Log Start PUT Accounts Flow" />
+		<ee:transform doc:name="Request Payload to SF"
+			doc:id="1a4b40bb-8b29-4324-b5a8-2e2b108d0799">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"UUID__c": payload.uuid,
+	"Name": payload.name,
+	"ID_Status__c": payload.status,
+	"Id": payload.id default "",
+	"Account_Type__c": "Billing",
+	"RecordTypeId": Mule::lookup('recordType-lookupFlow', "Billing Account", 30000)
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Payload has id?"
+			doc:id="5efb0dd3-d28c-440b-823e-ddb8779c87f8">
+			<when expression='#[isEmpty(payload[0].Id)]'>
+				<salesforce:upsert objectType="Account" doc:name="Upsert UUID_c" doc:id="459766ca-b043-4cab-9ddf-cb8ffacc9614" config-ref="Salesforce_Config" externalIdFieldName="UUID__c" />
+			</when>
+			<otherwise >
+				<salesforce:upsert objectType="Account" doc:name="Upsert Id" doc:id="f8d1bd0f-15aa-4fa2-b9fd-f228dd81ccb9" config-ref="Salesforce_Config" externalIdFieldName="Id" />
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Response Payload" doc:id="b40d14ef-11b4-4901-ac80-a900f006ed56">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Upsert Successful?" doc:id="051f399d-c10a-4ebf-9bed-f9f6497c4d8d" >
+			<when expression="#[payload.successful != true]">
+				<flow-ref doc:name="common-response-subflow" doc:id="8ba842b6-0331-41fe-9a64-715b8746ef42" name="common-response-subflow"/>
+                <json-logger:logger doc:name="Log Upsert Account Failure" doc:id="8eb9b4c1-7f7c-4f9d-b121-d91d695204f0" config-ref="JSON_Logger_Config" message="Log Upsert Account Failure" tracePoint="FLOW" priority="ERROR">
+                    <json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: (payload[0].errors default []) 
+}]]]></json-logger:content>
+                </json-logger:logger>
+				<raise-error doc:name="Upsert Account Failed" doc:id="500def37-1c70-4a6d-a98f-5be8c85cdfdb" type="CUSTOM:CUSTOM_ERROR" description="Upsert Account Failed" />
+				
+			</when>
+			<otherwise >
+				<json-logger:logger doc:name="Log Upsert Account Successful" config-ref="JSON_Logger_Config" doc:id="0410b4e6-04ab-4299-8a02-a10d467563a1" message="Log Upsert Account Successful" tracePoint="END" />
+			</otherwise>
+		</choice>
+		<json-logger:logger doc:name="Log End PUT Accounts Flow" doc:id="63f6ea18-d3c0-4132-a7b9-96e16ab97636" config-ref="JSON_Logger_Config" message="Log End PUT Accounts Flow" />	
+	</sub-flow>
+	
+	<sub-flow name="get-recordtype-subflow" doc:id="30f6098a-b19e-43b1-bc2b-1f3c76a6d1e8" >
+		<json-logger:logger doc:name="Log Start GET RecordType Flow" doc:id="5560f918-d75e-4f00-b088-1aad309da6c8" config-ref="JSON_Logger_Config" message="Log Start GET RecordType Flow" tracePoint="FLOW">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    sobjectType: attributes.queryParams.'sobjectType' as String default null,
+    recordName: attributes.queryParams.'Name' as String default null,
+    DeveloperName: attributes.queryParams.'DeveloperName' as String default null
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<choice doc:name="Choice" doc:id="cc80ca02-3946-4111-ac36-b347e99c6edf" >
+			<when expression="#[attributes.queryParams.'DeveloperName' == null  and attributes.queryParams.'Name' == null and attributes.queryParams.'sobjectType' == null]">
+				<set-payload value="#[[]]" doc:name="Set Payload" doc:id="40afa8e2-7324-4e8e-87c1-bd2c73036ebf" />
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Prepare SELECT Query with params" doc:id="ddca1fb1-f7ac-498d-8312-6d97a5a7a070" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+
+fun search_statements(a,b,c) = [
+	if ( !isBlank(a)) "Name = ':name'" else "",
+	if ( !isBlank(b)) "SobjectType = ':sobjectType'" else "",
+	if ( !isBlank(c)) "DeveloperName = ':DeveloperName'" else ""
+	] filter $ != "" joinBy " AND "
+
+---
+"SELECT Id, Name, DeveloperName, Description, SobjectType, IsActive FROM RecordType WHERE " ++
+search_statements(attributes.queryParams.'Name' default "", attributes.queryParams.'sobjectType'  default "",attributes.queryParams.'DeveloperName'  default "")]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<salesforce:query doc:name="Select from RecordType" doc:id="d816d4a9-87fa-4095-ad36-5a346702f0de" config-ref="Salesforce_Config">
+					<salesforce:salesforce-query ><![CDATA[#[payload]]]></salesforce:salesforce-query>
+					<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	name : attributes.queryParams.'Name' default "",
+	sobjectType : attributes.queryParams.'sobjectType' default "",
+	DeveloperName: attributes.queryParams.'DeveloperName' default "",
+}]]]></salesforce:parameters>
+				</salesforce:query>
+			</otherwise>
+			
+		</choice>
+		<choice doc:name="Choice" doc:id="3f0aaa8a-8aad-4a14-bf24-d3e7d931a911" >
+			<when expression="#[sizeOf(payload) &gt; 0]">
+				<ee:transform doc:name="Response Payload" doc:id="97f2bf34-52e2-4192-bac7-c276334d470b" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map() -> $ - "type"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<json-logger:logger doc:name="Logger Response for Record Type with specified parameters" doc:id="9061d544-695b-43b4-bfac-a9af9d1e65fb" config-ref="JSON_Logger_Config" message="Response for Account with specified parameters" tracePoint="END"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="204 Empty content" doc:id="bae35c07-51ca-4667-ab1b-15dfb06c81d6" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[204]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<json-logger:logger doc:name="Logger No Content to return" doc:id="2366b44a-d18a-4a74-a15b-32f2ed194bda" config-ref="JSON_Logger_Config" message="No Content to return" tracePoint="END">
+					<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: {}
+}]]]></json-logger:content>
+				</json-logger:logger>
+			</otherwise>
+		</choice>
+		<json-logger:logger doc:name="Log End GET RecordType Flow" doc:id="f1abca92-5a4e-40ed-b0b8-e4fa94632043" config-ref="JSON_Logger_Config" message="Log End GET RecordType Flow"/>
+	</sub-flow>
+
+<!-- 	<sub-flow name="get-billing-account-flow" doc:id="73e48f93-69b6-4f52-8a23-1133997ebb55" >
+		<json-logger:logger doc:name="Log Start GET Billing Account by UUID Flow" doc:id="4dd54a89-cb92-4d8d-a22e-afec97d68736" config-ref="JSON_Logger_Config" message="Log Start GET Billing Account by UUID Flow">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json -&#45;&#45;
+{
+    billingAccountUUID: vars.uuid
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Set SQL Query" doc:id="598aeddb-998a-4781-bcf5-e342f4705899" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="sfQuery" ><![CDATA[%dw 2.0
+output application/java
+var uuid = attributes.queryParams."uuid"
+var getAccountQuery = p('sf.accounts.billingAccount.query') default ""
+var accountIdClause = if (uuid != "") (" UUID__c ='" ++ uuid  as String ++ "'") else ""
+-&#45;&#45;
+"" ++ getAccountQuery  ++ " where " ++ accountIdClause]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<salesforce:query doc:name="Select Billing Account By UUID" doc:id="d4323932-ef22-46ab-89ba-0725df0273b4" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[#[vars.sfQuery]]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<ee:transform doc:name="Response Payload" doc:id="8b2ee4c0-b70e-4f51-b8a0-8aa8f44407ed">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+-&#45;&#45;
+//payload map() -> $ - "type"
+{(payload)}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<json-logger:logger doc:name="Log End GET Billing Account by UUID Flow" doc:id="fa197d4c-0e64-4645-b56c-6a6b6bf0ffeb" config-ref="JSON_Logger_Config" message="Log End GET Billing Account by UUID Flow" tracePoint="END"/>
+		
+	</sub-flow> -->
+	
+	<sub-flow name="patch-accounts-subflow" doc:id="7bc5ef6c-31a9-4f2b-bcae-b79361adaf19" >
+		<json-logger:logger doc:name="Log Start PATCH Accounts Flow" doc:id="8a7cea12-c1bc-4acd-a1bc-9ec54f373ec5" config-ref="JSON_Logger_Config" message="Log Start PATCH Accounts Flow"/>
+		<salesforce:update type="Account" doc:name="Update Billing Account" doc:id="e60a1261-093a-4296-b40b-7e716743ddd2" config-ref="Salesforce_Config"/>
+		<ee:transform doc:name="Response Payload" doc:id="19ec807b-4bbe-4bec-9be1-f179171faa79" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Log End PATCH Accounts Flow" doc:id="fe29adec-a4e7-4578-a8a6-d4df575b19b2" config-ref="JSON_Logger_Config" message="Log End PATCH Accounts Flow"/>
+	</sub-flow>
+	
+	<sub-flow name="get-accounts-by-sfid-subflow" doc:id="a7764e6a-9b76-48f7-84c9-106434344d98" >
+		<json-logger:logger doc:name="Log Start GET Accounts by SFID Flow" doc:id="e00ea941-6979-4b6a-8b59-89aafaf355f6" config-ref="JSON_Logger_Config" message="Log Start GET Accounts by SFID Flow" />
+		<ee:transform doc:name="var sfid" doc:id="4791bcae-721a-41b2-8d33-7416484aa3fd" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="sfid" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.uriParams.'sfid' as String]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<salesforce:query doc:name="SELECT Account by SFID" doc:id="d70ca865-f344-4967-8aab-dccd1064242e" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[SELECT Lead_Source__c,
+	   Number_of_Full_Time_Employees__c,
+	   ParentId,
+	   Phone,
+	   Primary_Member__c,
+	   LeadSource_Sub_Type__c,
+	   UUID__c,
+	   Id,
+	   Name
+FROM Account
+WHERE Id = ':sfid']]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+    sfid : vars.sfid
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Response Payload" doc:id="e279020b-6bf5-44f1-a693-6c484d9b6e8f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Log End GET Accounts by SFID Flow" doc:id="f50497a5-9802-4f88-8429-a8d5fc41ec65" config-ref="JSON_Logger_Config" message="Log End GET Accounts by SFID Flow"/>
+	</sub-flow>
+	
+	<sub-flow name="get-account-details-by-id-kube-subflow" doc:id="aa5a0c22-04db-4a32-b981-28d32dff4bf5" >
+		<json-logger:logger doc:name="Log Start GET Account by Id Flow" doc:id="dc87d1ab-3a5e-4a87-8ee8-3a24ad8c233b" config-ref="JSON_Logger_Config" message="Log Start GET Account by Id Flow">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: attributes.queryParams."Id"
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<salesforce:query doc:name="Query Account by Id" doc:id="1bf5ce1d-1aae-491a-a81a-1421f870e974" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[SELECT Id, Name, UUID__c FROM Account WHERE Id = ':id']]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	"id" : attributes.queryParams.Id
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Response Payload" doc:id="c2070664-c719-40d1-be74-36acf7d1e2e7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Log Start GET Account by Id Flow" doc:id="c76272d5-c975-4e14-abe7-b55ee1d5c372" config-ref="JSON_Logger_Config" message="Log Start GET Account by Id Flow"/>
+	</sub-flow> 
+</mule>

@@ -1,0 +1,47 @@
+api:
+  name: "wwj-salesforce-sapi"
+  version: "v1"
+  path: "/api/${api.version}/*"
+  id: ""
+  env: "UAT"
+  
+https:
+  host: ""
+  port: "8081"
+  timeout: "30000"
+
+certificates:
+  keystore:
+    path: "certificates/wwj-nonprod-mule.p12"
+    alias: "wwj-nonprod-mule"
+
+sf:
+  username: ""
+  token-endpoint: ""
+
+#SQL query
+query:
+  related-contacts: "SELECT contact.FirstName ,contact.LastName, contact.Email FROM AccountContactRelation where contact.UUID__c = ':uuid' and Roles includes ('Primary Member') Limit 1"
+  ekyc: "select Id, ClientProspectID__c, ClientOnboardingID__c, DateLastChanged__c from Risk_Screen__c where ClientProspectID__c !=null and ClientOnboardingID__c!=null and (OnboardingStatus__c !='0' and OnboardingStatus__c !='2')"
+  contract: "SELECT Name,Building_uuid__c,Actual_Start_Date__c,Id,Term__c,account.uuid__c FROM Opportunity where Id = ':Id'"
+  opportunity: "SELECT Name,Building_uuid__c,Gross_Desks__c,Id,Net_Desks__c,Net_TCV_Unweighted_Formula__c,Gross_ACV__c,Net_ACV_Unweighted__c,Gross_TCV_Formula__c,Gross_Term_TCV__c,CloseDate,StageName,Type__c,Referrer_Account__c,Segment__c,Building__c,RecordTypeId,AccountId,Contract_Type__c,Contract_Pdf__c,OwnerId FROM Opportunity where Id = ':Id'"    
+  accounts: 
+    account: "SELECT Id,UUID__c, Name from Account "
+    orders: "SELECT Id, OwnerId,  ContractId, AccountId,  Pricebook2Id, OriginalOrderId,  OpportunityId,  EffectiveDate,  EndDate,  IsReductionOrder, Status, Description,  Type, ActivatedDate,  ActivatedById,  StatusCode, CurrencyIsoCode,  OrderNumber,  TotalAmount,  CreatedDate,  CreatedById,  LastModifiedDate, LastModifiedById, IsDeleted,  SystemModstamp, LastViewedDate, LastReferencedDate from Order " # where AccountId='"
+    line-items: "SELECT Id,blng__BillableUnitPrice__c,blng__BillThroughDateOverride__c,blng__NextChargeDate__c,blng__OverrideNextBillingDate__c,blng__NextBillingDate__c ,  Product2Id, IsDeleted,  OrderId,  PricebookEntryId, OriginalOrderItemId,  AvailableQuantity,  Quantity, CurrencyIsoCode,  UnitPrice,  ListPrice,  TotalPrice, ServiceDate,  EndDate,  Description,  CreatedDate,  CreatedById,  LastModifiedDate, LastModifiedById, SystemModstamp, OrderItemNumber,SBQQ__TaxAmount__c from OrderItem "
+    invoices: "SELECT blng__Account__c,blng__Action__c,blng__ARStatus__c,blng__Balance__c,blng__BaseCurrencyAmount__c,blng__BaseCurrencyFXDate__c,blng__BaseCurrencyFXRate__c,blng__BaseCurrency__c,blng__BillToContact__c,blng__CorrectiveAction__c,blng__Credits__c,blng__DaysOutstanding__c,blng__DebitPayments__c,blng__Debits__c,blng__DeclinedPaymentRunCount__c,blng__DefaultPaymentType__c,blng__DueDate__c,blng__ImpactAmount__c,blng__InvoiceDate__c,blng__InvoicePostedDate__c,blng__InvoiceRunCreatedBy__c,blng__InvoiceStatus__c,blng__LastPaymentRunId__c,blng__LastPaymentRunProcessingMessage__c,blng__NegativeLineConversion__c,blng__Notes__c,blng__NumberOfInvoiceLines__c,blng__Order__c,blng__PaymentBatch__c,blng__PaymentMethod__c,blng__PaymentProcessStatus__c,blng__PaymentRunId__c,blng__PaymentRunProcessingMessage__c,blng__PaymentsAgainstInvoiceLines__c,blng__PaymentsAgainstInvoice__c,blng__PaymentStatus__c,blng__Payments__c,blng__RefundsAgainstInvoiceLines__c,blng__RefundsAgainstInvoice__c,blng__StatusFlag__c,blng__Subtotal__c,blng__TargetDate__c,blng__TaxAmount__c,blng__TaxErrorMessage__c,blng__TaxErrors__c,blng__TaxStatus__c,blng__TotalAmount__c,blng__UniqueId__c,CreatedById,CreatedDate,CurrencyIsoCode,Id,IsDeleted,LastActivityDate,LastModifiedById,LastModifiedDate,LastReferencedDate,LastViewedDate,Name,SFBD__HoldCollections__c,SystemModstamp FROM blng__Invoice__c " # where blng__Account__c=':uuid'
+    invoice-lines: "SELECT blng__AllocatedRevenueAmount__c,blng__ARStatus__c,blng__Asset__c,blng__BalancewithoutDebits__c,blng__Balance__c,blng__BaseCurrencyAmount__c,blng__BaseCurrencyFXDate__c,blng__BaseCurrencyFXRate__c,blng__BaseCurrency__c,blng__BillingFinanceBook__c,blng__BillingFinancePeriod__c,blng__BillingFrequency__c,blng__BillingGLRule__c,blng__BillingGLTreatment__c,blng__BillingRule__c,blng__BillingTransaction__c,blng__BillingTreatment__c,blng__CalculatedQuantity__c,blng__ChargeDate__c,blng__ChargeType__c,blng__ConvertedCreditNoteLine__c,blng__Credits__c,blng__DaysPastDue__c,blng__DebitPayments__c,blng__DebitsPaymentAllocations__c,blng__DebitsPaymentUnallocations__c,blng__Debits__c,blng__DueDate__c,blng__EndDate__c,blng__GroupedQuantity__c,blng__ImpactAmount__c,blng__InvoiceLineState__c,blng__InvoiceLineStatus__c,blng__InvoiceRun__c,blng__Invoice__c,blng__LegalEntityReference__c,blng__LegalEntity__c,blng__NegativeLineConversion__c,blng__NetAllocationsAgainstInvoiceLines__c,blng__Notes__c,blng__OrderProduct__c,blng__OverrideInitialRevenueEndDate__c,blng__OverrideInitialRevenueStartDate__c,blng__PaymentsAgainstDebitNoteLines__c,blng__PaymentsAgainstInvoiceLines__c,blng__Payments__c,blng__Product__c,blng__Quantity__c,blng__RefundsAgainstDebitNoteLines__c,blng__RefundsAgainstInvoiceLines__c,blng__RevenueExpectedAmount__c,blng__RevenueLiabilityAmount__c,blng__RevenueMostLikelyAmount__c,blng__RevenueScheduleStatus__c,blng__StartDate__c,blng__Subtotal__c,blng__TaxAmount__c,blng__TaxCity__c,blng__TaxCountry__c,blng__TaxCounty__c,blng__TaxErrorMessage__c,blng__TaxError__c,blng__TaxGLRule__c,blng__TaxGLTreatment__c,blng__TaxLocationCode__c,blng__TaxPercentageApplied__c,blng__TaxRule__c,blng__TaxState__c,blng__TaxStatus__c,blng__TaxStreet2__c,blng__TaxStreet__c,blng__TaxTreatment__c,blng__TaxZipCode__c,blng__TotalAmount__c,blng__UniqueId__c,blng__UnitPrice__c,blng__UsageSummary__c,CreatedById,CreatedDate,CurrencyIsoCode,Id,IsDeleted,LastActivityDate,LastModifiedById,LastModifiedDate,Name,SystemModstamp FROM blng__InvoiceLine__c "
+    shortcode:  "SELECT Member_Short_Code__c FROM Account WHERE uuid__c = ':accountid'"
+    billing-account: "SELECT ID, Name, UUID__c, Primary_Member__c, ParentId, Ultimate_Parent_Org__c,Member_Short_Code__c,Parent.Account_Manager_Lookup__r.Name, CurrencyIsoCode FROM Account "  
+    manager-account: "SELECT Account_Manager_Lookup__c,Member_Short_Code__c FROM Account WHERE uuid__c = ':company_uuid'"
+    manager-user: "SELECT Name FROM User WHERE Id = ':Account_Manager_Lookup__c'"
+        
+untilsuccessful:
+  maxretries: "2"
+  frequency:  "5000"
+salesrecord:
+  untilsuccessful:
+    maxretries: "2"
+    frequency: "60000"
+    
+skipErrors: "INVALID_EMAIL_ADDRESS, STRING_TOO_LONG, data value too large, DUPLICATE_VALUE, INSUFFICIENT_ACCESS_ON_CROSS_REFERENCE_ENTITY, CANNOT_INSERT_UPDATE_ACTIVATE_ENTITY, UNABLE_TO_LOCK_ROW, FIELD_FILTER_VALIDATION_EXCEPTION, unable to obtain exclusive access to this record"

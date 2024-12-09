@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="common-response-subflow" doc:id="e5643b60-db43-42eb-a070-f61be314ec97" >
+		<ee:transform doc:name="Transform responce to same format" doc:id="7e7f6c44-5933-4875-8ddf-c4431053e0aa" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+if (payload..payload != null)
+    payload..payload
+else payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="common-transform-check-and-set-nulls-before-upsert" doc:id="4b8ae638-d897-479d-adac-71f651dad901" >
+		<ee:transform doc:name="Check and set null values" doc:id="539772b8-c874-4915-9fba-0273d42d3110" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Objects
+---
+if(typeOf(payload) as String == "Array") 
+payload map (item, index) -> {
+    (item mapObject ((($$): $) if ($ != null)) ++
+    "fieldsToNull": valueSet(item mapObject (( key: $$ ) if(($ == null)) )  ))
+}
+ else 
+ payload mapObject ((($$): $) if ($ != null)) ++
+    "fieldsToNull": valueSet(payload mapObject (( key: $$ ) if(($ == null)) )  )]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Logger for payload before upsert" doc:id="3db533b1-5a0a-49a2-be4b-454a94d8acfb" config-ref="JSON_Logger_Config" message="Payload before upsert" tracePoint="BEFORE_REQUEST" />
+	</sub-flow>
+</mule>

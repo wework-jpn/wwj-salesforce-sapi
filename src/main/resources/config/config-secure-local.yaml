@@ -1,0 +1,9 @@
+certificates:
+  keystore:
+    password: "![qTpUPDTCWGvgg8YJXveBj0BA1JUPptHO]"
+
+sf:
+  consumer-key: "![VuUy7r+ts8+++kVjL1vg0TvlgFpahcspt+6757t2Wl0X6wxscEGst/fJZFS+n0ORr8Wp1Mp+FZhOBTomgK1xdkYGT49EHX9ahYFGowPvw2AVshqoV3aSwg==]"
+  consumer-secret: "![pmTCrM50e8R5C20bJTyQqu5f7lgB4jGpBmLV6gfnYwzMDZxgCqA15y8mv3vKrddKZBbHbzN0+tcQzyKtWyA7cFKWMsTDLqbb]"
+  password: "![SajsKMqNqTifvn64WAvB14lOW24snCfe]"
+  

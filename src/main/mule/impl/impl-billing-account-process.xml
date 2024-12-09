@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	
+	<sub-flow name="get-billing-account-by-queryparam-uuid-flow" doc:id="3e95d805-1c33-48a3-80f9-642064bda308" >
+		<json-logger:logger doc:name="Log Start GET Billing Account by QueryParam UUID Flow" doc:id="a64c12e1-ef35-4ff8-9873-2da924bef79e" config-ref="JSON_Logger_Config" message="Log Start GET Billing Account by QueryParam UUID Flow">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    billingAccountUUID: vars.uuid
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Set SQL Query" doc:id="e0a5a051-34bd-4aaf-ac59-df7d36e2dc81" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="sfQuery" ><![CDATA[%dw 2.0
+output application/java
+var uuid = attributes.queryParams."uuid"
+var getAccountQuery = p('sf.accounts.billingAccount.query') default ""
+var accountIdClause = if (uuid != "") (" UUID__c ='" ++ uuid  as String ++ "'") else ""
+---
+"" ++ getAccountQuery  ++ " where " ++ accountIdClause]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<salesforce:query doc:name="Select Billing Account By UUID" doc:id="7af365c0-bbfc-4604-baeb-6797347e5fba" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[#[vars.sfQuery]]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<ee:transform doc:name="Response Payload" doc:id="4401f54e-a84e-4d12-af27-fdcb09e49ae3">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+//payload map() -> $ - "type"
+{(payload)}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<json-logger:logger doc:name="Log End GET Billing Account by QueryParam UUID Flow" doc:id="d3318398-ae96-45c9-bda1-d209352e1645" config-ref="JSON_Logger_Config" message="Log End GET Billing Account by QueryParam UUID Flow" tracePoint="END"/>
+		
+	</sub-flow>
+	
+	<sub-flow name="get-billing-account-by-uriparam-uuid-flow" doc:id="f9f8ee93-61e4-428f-935b-88b6596e97eb" >
+		<json-logger:logger doc:name="Log Start GET Billing Account by URIParam UUID Flow" doc:id="4f02aa7a-9620-4322-a0f9-7330c55c3b27" config-ref="JSON_Logger_Config" message="Log Start GET Billing Account by URIParam UUID Flow">
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    billingAccountUUID: vars.uuid
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" doc:name="Set uuid var">
+            <ee:variables>
+				<ee:set-variable variableName="uuid" ><![CDATA[attributes.uriParams.'uuid']]></ee:set-variable>
+            
+</ee:variables>
+        </ee:transform>
+		<until-successful maxRetries="${untilsuccessful.maxretries}" doc:name="Until Successful" doc:id="91c81828-b0ce-48b9-88b1-7d593263e30e" millisBetweenRetries="${untilsuccessful.frequency}">
+			<salesforce:query doc:name="Select Billing Account By UUID" doc:id="b932ddc9-5852-4464-81e3-a4ce0d4ee676" config-ref="Salesforce_Config">
+				<salesforce:salesforce-query ><![CDATA[select UUID__c, 
+	   Id, 
+	   Ultimate_Parent_Org__c,
+	   Parent.Account_Manager_Lookup__r.Full_Name__c,
+	   Tier__c, 
+	   Owner.Name, 
+	   Ultimate_Parent_Org__r.Name
+   from Account where UUID__c=':uuid']]></salesforce:salesforce-query>
+				<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	"uuid" : vars.uuid
+}]]]></salesforce:parameters>
+			</salesforce:query>
+
+		</until-successful>
+		<ee:transform doc:name="Format Payload into JSON" doc:id="008c28b3-4145-4281-859f-1aa80c23c428" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="841e5e69-cb25-41a4-aaa7-d61b54cbebc8" message="SF Response payload: #[payload]" />
+		<ee:transform doc:name="Response Payload" doc:id="d5073b00-eae6-47e3-8430-b398671b14fd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+ {
+	"billingAccountUUID":payload[0].UUID__c,
+	"billingAccountParentOrg":payload[0].Ultimate_Parent_Org__c,
+	"billingAccountSFDCID": payload[0].Id,
+	"accountManager": payload[0].Parent.Account_Manager_Lookup__r.Full_Name__c,
+    "accountLevel": if ((payload[0].Tier__c) != null) payload[0].Tier__c else "Community Managed",
+    "accountOwner": if ((payload[0].Tier__c) != null) payload[0].Owner.Name else "Community Managed",
+    "accountUltimateParent":payload[0].Ultimate_Parent_Org__r.Name
+
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Log End GET Billing Account by URIParam UUID Flow" doc:id="adc15dbb-2eb3-4405-b134-c8608663ed99" config-ref="JSON_Logger_Config" message="Log End GET Billing Account by URIParam UUID Flow" >
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    billingAccountUUID: vars.uuid
+}]]]></json-logger:content>
+		</json-logger:logger>
+		
+	</sub-flow>
+	
+	<sub-flow name="get-billing-account-by-companyuuid" doc:id="cbd862d0-388b-46f3-9c19-f5dea39021d0" >
+		<json-logger:logger doc:name="Logger" doc:id="25fdcfcb-4188-45a9-bad5-b99b30abaf76" config-ref="JSON_Logger_Config" message="Start: Billing Account ID Verification using companyUUID">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    "message": vars.company_uuid
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Set company_uuid var" doc:id="a9cde106-2ac4-4af8-9ce7-33807c2352b7">
+			<ee:variables>
+				<ee:set-variable variableName="company_uuid"><![CDATA[attributes.uriParams.'company_uuid']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<salesforce:query doc:name="Get BillingAccount By Company_UUID" doc:id="ae8a753d-072d-4f04-a777-24372a75712c" config-ref="Salesforce_Config">
+			<reconnect />
+			<salesforce:salesforce-query ><![CDATA[Select Id from Account where uuid__c=':company_uuid']]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[%dw 2.0
+output application/java
+---
+company_uuid: vars.company_uuid]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Message" doc:id="2f7e4ab3-fa46-48f0-b5a8-34f2be941279" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+			</ee:variables>
+		</ee:transform>
+		<json-logger:logger doc:name="Logger" doc:id="3adf6b7a-bb41-4e85-8681-49ceacc0bbc0" config-ref="JSON_Logger_Config" message="End: Billing Account Retrieval based on company UUID" tracePoint="END">
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: JSONLoggerModule::stringifyNonJSON(payload) 
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<choice doc:name="Choice" doc:id="17f3a3d7-8fa9-42ea-93a5-64ce55ac8766" >
+			<when expression='#[!isBlank(payload[0].Id) and payload[0].Id !="" and payload[0].Id !=null]'>
+				<ee:transform doc:name="Transform successful payload" doc:id="7c385f60-c453-4c19-873b-4fe653700a90" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload[0].Id]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Set empty payload" doc:id="663f552f-f55c-4c97-8299-5a2bc8777b5c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+"204"]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="upsert-billing-account-subflow" doc:id="b469cf57-2e1a-436f-8455-7019147e8917">
+		<ee:transform doc:name="Save payload and variables" doc:id="f06efdb5-1d65-435d-ab0d-1986482f7ccc">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+            <ee:variables>
+                <ee:set-variable variableName="uuid"><![CDATA[%dw 2.0
+output application/java
+---
+"'"++ payload.UUID__c ++"'" replace " " with ""]]></ee:set-variable>
+                <ee:set-variable variableName="mainPayload"><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+<json-logger:logger doc:name="Logger Input Billing Account payload" doc:id="f92e7782-ec19-450f-9f10-9606eba16784" config-ref="JSON_Logger_Config" message="Input Billing Account payload" />
+		<flow-ref doc:name="Call Companies Billing Account Upsert Flow" doc:id="acb4e3da-7e94-4cd5-bbee-da3c1103f4ea" name="companies-billingAccount-upsert-flow" />
+		<!-- [STUDIO:"Query to check Is_Deleted"]		<salesforce:query doc:name="Query to check Is_Deleted" doc:id="a4b4ee46-a32f-44f3-9dd8-b3b238e0b347" config-ref="Salesforce_Config">
+            <salesforce:salesforce-query><![CDATA[select 
+Id,
+Is_Deleted__c,
+Merged_Account_UUID__c 
+from 
+Merged_Account__c  
+where 
+Merged_Account_UUID__c =:uuid]]></salesforce:salesforce-query>
+            <salesforce:parameters><![CDATA[#[output application/java
+&#45;&#45;-
+{
+	uuid : vars.uuid
+}]]]></salesforce:parameters>
+        </salesforce:query> [STUDIO] -->
+<!-- [STUDIO:"Transform response to JSON"]		<ee:transform doc:name="Transform response to JSON" doc:id="3e00cfc1-cffe-4e44-ab59-c9270189767d">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform> [STUDIO] -->
+<!-- [STUDIO:"Choice"]		<choice doc:name="Choice" doc:id="a8b23199-e311-492c-9064-50d656d20b77">
+            <when expression="#[payload.Is_Deleted__c== &quot;true&quot;]">
+                <json-logger:logger doc:name="Logger Billing Account Deteled and will be skipped without Upsert" doc:id="76d9e594-39eb-4345-9113-47847eb22f1a" config-ref="JSON_Logger_Config" message="Billing Account Deleted and will be skipped without Upsert" tracePoint="FLOW" />
+				<ee:transform doc:name="Prepare response" doc:id="c0d440d4-b839-4a6a-a45c-e1b38d843097">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+[
+  {
+    "created": false,
+    "success": true,
+    "id": null,
+    "message": "Billing Account already deleted in SF and was skipped before Upsert",
+    "errors": [
+      
+    ]
+  }
+]]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <ee:transform doc:name="Save input message as payload for Upsert" doc:id="c4c7ebfc-74ac-456e-ac54-cd32ab56d562">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+&#45;&#45;-
+vars.mainPayload]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </otherwise>
+        </choice> [STUDIO] -->
+	</sub-flow>
+	<sub-flow name="companies-billingAccount-upsert-flow"
+		doc:id="ceb900f8-4906-4b9b-8668-b43c4c1691d0">
+		<ee:transform doc:name="BillingAccount_Transform Message"
+			doc:id="6fbaf298-7f93-4e88-90ce-787a7992887a">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[{	
+	Name: if(sizeOf(payload.Name)>=80) payload.Name[0 to 79] else payload.Name,	
+	ID_Status__c: payload.ID_Status__c,	
+	UUID__c: payload.UUID__c,
+	Id:payload.Id default "",	
+	Account_Creation_Source__c: "Id",
+	Account_Type__c: "Billing",
+    "RecordTypeId": Mule::lookup('recordType-lookupFlow', "Billing Account", 30000),
+    Managed_By__c: payload.Managed_By__c
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="Call common transform check and set nulls before upsert" doc:id="7f20bf6f-f1ab-4c72-a063-935109574a41" name="common-transform-check-and-set-nulls-before-upsert"/>
+		<json-logger:logger doc:name="Logger Prepared payload for Upsert" doc:id="13b82fe5-a703-441f-afc2-66598e926af0" config-ref="JSON_Logger_Config" message="Prepared payload for Upsert" tracePoint="BEFORE_REQUEST"/>
+		<choice doc:name="Choice" doc:id="38c2f772-4d86-4a0f-91d0-bf523ff60b75" >
+			<when expression="#[isEmpty(payload[0].Id)]">
+				<logger level="INFO" doc:name="Upsert Billing Account by external UUID" doc:id="94b881bc-d779-411f-b0ad-b40d1ac39e63" message="Upsert Billing Account by external UUID"/>
+				<salesforce:upsert doc:name="Upsert Billing Account by external UUID" doc:id="242a145c-ffc3-4bd7-b511-220f15487e58" config-ref="Salesforce_Config" objectType="Account" externalIdFieldName="UUID__c" />
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Update Billing Account by external Id" doc:id="9734c3bb-52dd-417c-a4b1-9025b94087e7" message="Update Billing Account by external Id"/>
+				<salesforce:update doc:name="Update" doc:id="50734a83-51b4-485c-95ca-94f97b86d5ee" config-ref="Salesforce_Config" type="Account"/>
+			</otherwise>
+		</choice>
+		<flow-ref doc:name="common-response-subflow" doc:id="d5c47e79-5bc7-47fe-9479-98ecea4f3d9a" name="common-response-subflow"/>
+		<ee:transform doc:name="Response Payload into JSON"
+			doc:id="bbd21e96-40a9-4be6-b3b2-6faf62a27fac">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+			</ee:variables>
+		</ee:transform>
+		<json-logger:logger doc:name="Logger for payload after upsert" doc:id="f9f14f2e-70b4-4686-a5d7-3cf8f255bf7b" config-ref="JSON_Logger_Config" message="Response after Upsert" tracePoint="END" />
+	</sub-flow>
+		
+</mule>

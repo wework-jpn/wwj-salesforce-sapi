@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<sub-flow name="salesforce-db:\get-account-search-subflow" doc:id="6c2070d0-8485-49b7-b895-f53792adcbe2" >
+		<logger level="INFO" doc:name="Logger" doc:id="cc8d5b73-ef33-4b76-afd3-b9080b36331c" />
+	</sub-flow>
+</mule>

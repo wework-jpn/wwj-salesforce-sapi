@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="get-contact-details-kube-subflow" doc:id="85f66823-833d-473e-b467-f78fe7d5b152" >
+		<json-logger:logger doc:name="Log Start GET Kube Details in Contact Object Flow" doc:id="01768282-a4c8-4e72-b23a-01d6c9cebd80" config-ref="JSON_Logger_Config" message="Log Start GET Kube Details in Contact Object Flow" >
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: attributes.queryParams."Id"
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<salesforce:query doc:name="SELECT Contact Details" doc:id="20dfa897-62be-4c3b-8ec7-81bd0afac448" config-ref="Salesforce_Config" >
+			<salesforce:salesforce-query ><![CDATA[SELECT Id, FirstName, LastName, Email, Locale__c, UUID__c, Exists_in_Id__c, User_Kind__c, Phone FROM Contact WHERE Id = ':id']]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	"id" : attributes.queryParams.Id
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Response Payload" doc:id="8418abff-7e6a-4fc4-92f1-976c91a43f95" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Log End GET Kube Details in Contact Object Flow" doc:id="ea413444-c43b-463e-b68e-9cfbdcdcca9a" config-ref="JSON_Logger_Config" message="Log End GET Kube Details in Contact Object Flow" />
+	</sub-flow>
+	<sub-flow name="patch-contact-details-kube-subflow" doc:id="35e816d3-68dd-4bf1-a104-d4b7038580e2" >
+		<json-logger:logger doc:name="Log Start PATCH Kube Details in Contact Object Flow" doc:id="79e9dddc-aee6-4786-b77f-12fdf9e36d39" config-ref="JSON_Logger_Config" message="Log Start PATCH Kube Details in Contact Object Flow" />
+		<salesforce:update type="Contact" doc:name="Update Contact Details" doc:id="497c3a90-203a-414d-8ff7-3613faea5653" config-ref="Salesforce_Config" />
+		<ee:transform doc:name="Response Payload" doc:id="395f1847-222a-4dff-a61a-40208d427a4f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Log End PATCH Kube Details in Contact Object Flow" doc:id="7accea70-5d68-4355-b13d-9a2ed154a251" config-ref="JSON_Logger_Config" message="Log End PATCH Kube Details in Contact Object Flow" />
+	</sub-flow>
+	<sub-flow name="get-contact-search-subflow" doc:id="efb1ea39-a636-4e97-81b9-8ffbd628455d" >
+		<ee:transform doc:name="Set SQL Query" doc:id="0d910b91-d416-4e6e-b0b3-37c09c27ef8f" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="sql" ><![CDATA[%dw 2.0
+output application/java
+fun add_where_clause(statement) = if (!isBlank(statement)) 
+								" WHERE " ++ statement else ""
+fun search_statements(a,b,c,d) = [
+	if ( !isBlank(a)) "FirstName = ':first'" else "",
+	if ( !isBlank(b)) "LastName = ':last'" else "",
+	if ( !isBlank(c)) "Email = ':email'" else "",
+	if ( !isBlank(d)) "UUID__c = ':uuid'" else "",
+	] filter $ != "" joinBy " AND "
+---
+"SELECT Id, FirstName, LastName, Account_Name__c , Email, Title,  Phone, LeadSource, LeadSource_Sub_Type__c, Type__c, Market__c, Marketing_Consent__c, HasOptedOutOfEmail, UUID__c FROM Contact" ++
+add_where_clause(search_statements(
+	attributes.queryParams.'first_name' default "",
+	attributes.queryParams.'last_name'  default "",
+	attributes.queryParams.'email'  default "",
+	attributes.queryParams.'uuid'  default ""
+)) ++
+" LIMIT 10"]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<salesforce:query doc:name="SELECT Contact Details" doc:id="a0e8c839-c7c4-4e88-af53-6c890c722991" config-ref="Salesforce_Config" >
+			<salesforce:salesforce-query ><![CDATA[#[vars.sql]]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	first : attributes.queryParams.'first_name' default "",
+	last: attributes.queryParams.'last_name' default "",
+	email: attributes.queryParams.'email' default "",
+	uuid: attributes.queryParams.'uuid' default ""
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<choice doc:name="is Payload empty?" doc:id="e774c81d-bb7b-4630-8115-eb2c17f1f95c" >
+			<when expression="#[sizeOf(payload) &gt; 0]" >
+				<ee:transform doc:name="Response Payload" doc:id="5f3fd504-65ca-49a8-99f0-61e13976009e" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map() -> $ - "type"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Response Payload" doc:id="07b5e20a-8814-4e49-a601-fafdf1609644" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[204]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>
