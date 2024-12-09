@@ -1,0 +1,22 @@
+#%RAML 1.0 DataType
+    properties:
+      product_code: 
+        type: string | nil
+        required: false
+      quantity: 
+        type: integer | nil | string
+        required: false
+      unit_price: 
+        type: number
+        format: double
+        required: false
+      total_price: 
+        type: number
+        format: double
+        required: false
+      building_uuid:
+        type: string | nil
+        required: false
+      start_date:
+        type: date-only | nil
+        required: false

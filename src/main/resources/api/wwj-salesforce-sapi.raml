@@ -1,0 +1,1230 @@
+#%RAML 1.0
+title: WWJ Salesforce SAPI
+mediaType:
+- application/json
+version: v1
+
+resourceTypes:
+  resourceType: {}
+protocols:
+  - HTTPS
+description: The Salesforce System API will connect to Salesforce to get/post/patch data. Used by apps and users to access orgc data from Salesforce
+types:
+  account: !include exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/account-data-types/1.0.0/account.raml
+  contact: !include exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/account-data-types/1.0.0/contact.raml
+  Reservation: !include reservationDataType.raml
+  sfGetReservableRequestType: !include sfGetReservableRequestTypeDataType.raml
+  tour-creation: !include tourCreationDataType.raml
+  lead-submission: !include leadSubmissionDataType.raml
+  tour-reschedule: !include tourRescheduleDataType.raml
+  market: !include  marketDataType.raml
+  building: !include buildingDataType.raml
+  opportunity: !include opportunityDataType.raml
+  OpportunityclosedwonResponse: !include /Types/Opportunities-closedwon.raml
+  task: !include taskDataType.raml
+  member-insights: !include member-insightsDataType.raml
+  vts-account: !include accountDataType.raml
+  vts-contact: !include contactDataType.raml
+  idrails-contact: !include createContactByApexDataType.raml
+  sfUpdateOpportunityRequestType: !include sfUpdateOpportunityRequestType.raml
+  group: !include groupDataType.raml
+  marketconsent: !include sfPatchContactRequestType.raml
+  shortcode-get-uuid-200: !include /shortcode-get-by-uuid-200-response-dataType.raml
+  manager-response: !include /get-manager-response-dataType.raml
+  billingAccount-response: !include /billingAccountbyuuid_response.raml
+  billing-account-request: !include /Types/billingAccount.raml
+  opportunity-by-id: !include /Types/opportunitybyId.raml
+  sfUpdateAccountRequestType: !include /sfUpdateAccountRequestType.raml
+
+uses:
+  security-schema-lib: exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/security-schemas-lib/1.0.0/security-schemas-lib.raml
+  error-lib: exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/common-error-lib/1.0.1/common-error-lib.raml
+  resource-type-lib: exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/resource-type-lib/1.0.1/resource-type-lib.raml
+securedBy:
+  - security-schema-lib.clientIDrequired
+
+
+/healthcheck:
+  type: resource-type-lib.healthcheck
+  is:
+    - error-lib.http-error-response
+      
+/getContractIdProposalId:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Get Contract_UUID_c from SF
+    queryParameters:
+      contractUuid:
+        type: string
+        required: true
+    responses:
+      "200":
+        description: Contract_UUID_c for discard
+        body:
+          application/json:
+            example: !include examples/responses/get-Contract_UUID_c-200.json
+
+/reservable:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Search Reservables by Building SFID
+    queryParameters:
+      building_sfid:
+        type: string
+        example: a000G00000OoOutQAF
+    responses:
+      "200":
+        description: List of Reservables. Empty array returned in case of nothing matching
+        body:
+          application/json:
+            example: !include examples/responses/reservable-get-by-building-sfid-200.json
+            items: sfGetReservableRequestType
+/user:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Search users by user Id
+    queryParameters:
+      user_id:
+        type: string
+        example: 0052E00000KuAtxQAF
+        required: False
+    responses:
+      "200":
+        description: User details like name, emailId etc
+        body:
+          application/json:
+            example: !include /examples/responses/tray-userId.json
+            type: !include /Types/tray-userId.raml           
+/accounts:
+  is:
+    - error-lib.http-error-response
+  put:
+    body:
+      application/json:
+        example: !include exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/account-data-types/1.0.0/examples/account-request-payload.json
+        type: account
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include responseExample.json
+            type: any
+  patch:
+    displayName: Update multi accounts
+    body:
+      application/json:
+        example: !include examples/accounts-patch-request.json
+        items: sfUpdateAccountRequestType
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include examples/responses/accounts-patch-response-200.json
+            type: any
+  /{sfid}:
+    uriParameters:
+      sfid:
+        description: API required value with  Account SFID
+        type: string
+        required: true
+        example: 861f1c06-20b0-4ddf-8486-9e9cf5363232
+    get:
+      displayName: Get  account by sfid
+      responses:
+        "200":
+          body:
+            application/json:
+              type: account
+/recordType:
+  is:
+    - error-lib.http-error-response
+  get:
+      displayName: Search RecordType details for a sobjectype
+      queryParameters:
+        Name?:
+          type: string
+          example: BillingAccount
+        sobjectType?:
+          type: string
+          example: Account
+        DeveloperName?:
+          type: string
+          example: 23abc
+      responses:
+        "200":
+          body:
+            application/json:
+              type: !include /recordDataTypeResponse.raml
+/account:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Search for Accounts with specified criteria
+    queryParameters:
+      Name?:
+        type: string
+        example: Andreas Neuman
+      UUID__c?:
+        type: string
+        example: 2091f2d0-c46f-4c51-bf1f-3528c1b7760a
+      RecordTypeId?:
+        type: string
+        example: 23abc
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include /examples/responses/account-get-by-uuid-or-name-200.json
+            items: vts-account
+      "204":
+        description: No content
+  post:
+    body:
+      application/json:
+        example: !include /examples/account-post-request.json
+        type: vts-account
+    responses:
+      "201":
+        body:
+          application/json:
+            type: object
+            properties:
+              id:
+                type: string
+  /company:
+    /{company_uuid}:
+      uriParameters:
+        company_uuid:
+          type: string
+      /manager:
+        is:
+          - error-lib.http-error-response
+        get:
+          responses:
+            "200":
+              body:
+                application/json:
+                  example: !include /examples/get-manager-response-200.json
+                  type: manager-response
+  /{accountid}:
+    uriParameters:
+      accountid:
+        type: string
+    /shortcode:
+      get:
+        responses:
+          "200":
+            body:
+              application/json:
+                example: !include /examples/shortcode-get-by-uuid-200-response.json
+                type: shortcode-get-uuid-200
+/account/kube:
+  is:
+    - error-lib.http-error-response
+  patch:
+    displayName: Update Account Kube Details
+    body:
+      application/json:
+        example: !include /examples/updateAccount.json
+    responses:
+        "200":
+          body:
+            application/json:
+              type: any
+  get:
+    displayName: Get Account Info By Id
+    queryParameters:
+      Id?:
+        type: string        
+    responses:
+      "200":
+        body:
+          application/json:
+            items: any
+      "204":
+        description: no content
+      "500":
+        body:
+          application/json:
+            type: any
+/building:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Search building
+    queryParameters:
+      uuid:
+        type: string
+        example: 913826af-14e7-46d9-aa0d-9e0c21b4ece0
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include building-get-by-uuid-200.json
+            items: building
+  post:
+    displayName: Create new Building
+    body:
+      application/json:
+        type: building
+    responses:
+      "201":
+        body:
+          application/json:
+            type: building
+  patch:
+    displayName: Update Building
+    queryParameters:
+      uuid:
+        type: string
+    body:
+      application/json:
+        type: building
+    responses:
+      "200":
+        body:
+          application/json:
+            type: building
+  /active:
+    is:
+      - error-lib.http-error-response
+    displayName: Get active buildings
+    get:
+      queryParameters:
+        vts_inventory__c:
+          type: boolean
+          required: false
+          example: true
+      responses:
+        "200":
+          body:
+            items:
+              type: object
+              properties:
+                Id:
+                  type: string
+                  example: a000G00000QE6lfQAD
+                UUID__c:
+                  type: string
+                  example: fabf963a-fb87-4c85-a62f-8d3102979004
+  /building_id:
+    is:
+      - error-lib.http-error-response
+    displayName: Get buildings by Id
+    get:
+      queryParameters:
+        Id:
+          type: string
+          required: false
+          example: "aAd5x000000CarcCAC"
+      responses:
+        200:
+          body:
+              application/json:
+                example: !include /examples/responses/tray-buildingbyID.json
+                type: !include /Types/tray-buildingID.raml
+  /tourable:
+    is:
+      - error-lib.http-error-response
+    displayName: Get all tourable buildings
+    get:
+      responses:
+        200:
+          body: 
+            application/json:
+              example: !include /examples/get-tourable-buildings-response.json
+              type: !include /get-tourable-buildings-response.raml
+/contacts:
+  is:
+    - error-lib.http-error-response
+  put:
+    body:
+      application/json:
+        example: !include exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/account-data-types/1.0.0/examples/contact-request-payload.json
+        type: contact
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include responseExample.json
+            type: any
+  get:
+    queryParameters:
+      first_name?:
+        type: string
+      last_name?:
+        type: string
+      email?:
+        type: string
+      uuid?:
+        type: string
+    responses:
+      "200":
+        body:
+          application/json:
+            items: contact
+  /marketing-consent/{uuid}:
+    is:
+      - error-lib.http-error-response
+    uriParameters:
+      uuid:
+        type: string
+        required: true
+        example: 321e382f-f28f-468d-9dd0-d882b40ce76c
+    patch:
+      displayName: Update Contact marketing consent by UUID
+      body:
+        application/json:
+          example: !include /examples/contact-patch-request.json
+          type: marketconsent
+      responses:
+        "200":
+          body:
+            application/json:
+              type: any
+/submitIdRailsContact:
+  is:
+    - error-lib.http-error-response
+  post:
+    displayName: Create Contact by Apex API
+    body:
+      application/json:
+        example: !include /examples/contact-post-request-by-apex.json
+        type: idrails-contact
+    responses:
+      "201":
+        body:
+          application/json:
+            example: !include /examples/contact-post-response-by-apex.json
+            type: any
+      "500":
+        body:
+          application/json:
+            type: any
+/contact:
+  is:
+    - error-lib.http-error-response
+  post:
+    body:
+      application/json:
+        example: !include /examples/contact-post-request.json
+        type: vts-contact
+    responses:
+      "201":
+        body:
+          application/json:
+            type: vts-contact
+      "500":
+        body:
+          application/json:
+            type: any
+  get:
+    displayName: Search for Contacts
+    queryParameters:
+      first_name?:
+        type: string
+      last_name?:
+        type: string
+      email?:
+        type: string
+      uuid?:
+        type: string
+    responses:
+      "200":
+        body:
+          application/json:
+            items: vts-contact
+      "204":
+        description: no content
+      "500":
+        body:
+          application/json:
+            type: any
+/contact/kube:
+  is:
+    - error-lib.http-error-response
+  patch:
+    displayName: Update Contact Kube Details
+    body:
+      application/json:
+        example: !include /examples/updateContact.json
+    responses:
+      "200":
+        body:
+          application/json:
+            type: any
+  get:
+    displayName: Get Contact Info By Id
+    queryParameters:
+      Id?:
+        type: string        
+    responses:
+      "200":
+        body:
+          application/json:
+            items: any
+      "204":
+        description: no content
+      "500":
+        body:
+          application/json:
+            type: any
+/market:
+  is:
+    - error-lib.http-error-response
+  post:
+    body:
+      application/json:
+        type: market
+    responses:
+      "201":
+        body:
+          application/json:
+            type: market
+  get:
+    queryParameters:
+      uuid:
+        type: string
+    responses:
+      "200":
+        body:
+          application/json:
+            type: market
+      "204":
+        description: no content
+/moveInReservation:
+  is:
+    - error-lib.http-error-response
+  post:
+    displayName: "Upsert Reservation__c object for move in"
+    body:
+      application/json:
+        type: !include /contractevent-move-in-amendment.raml
+        example: !include /move-in-request.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: any
+            examples:
+              upsertedExample: !include examples/responses/billing-account-post-upsert-response-201.json
+              upsertFailedExample: !include examples/responses/billing-account-post-upsert-failed-response-201.json 
+/moveOutReservation:
+  is:
+    - error-lib.http-error-response
+  post:
+    displayName: "Upsert for moveout Reservation"
+    body:
+      application/json:
+        type: !include /moveoutReservation.raml
+        example: !include examples/moveoutReservation.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: any
+            examples:
+              upsertedExample: !include examples/responses/billing-account-post-upsert-response-201.json
+              upsertFailedExample: !include examples/responses/billing-account-post-upsert-failed-response-201.json 
+/cancelReservation:
+  is:
+    - error-lib.http-error-response
+  post:
+    displayName: "cancel moveout Reservation"
+    body:
+      application/json:
+        type: !include /cancelMoveout.raml
+        example: !include examples/moveoutReservation.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: any
+            examples:
+              upsertedExample: !include examples/responses/billing-account-post-upsert-response-201.json
+              upsertFailedExample: !include examples/responses/billing-account-post-upsert-failed-response-201.json
+/amendmentReservation:
+  is:
+    - error-lib.http-error-response
+  post:
+    displayName: "Upsert Reservation__c object for amendmentReservation"
+    body:
+      application/json:
+        type: !include /contractevent-move-in-amendment.raml
+        example: !include /move-in-request.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: any
+            examples:
+              upsertedExample: !include examples/responses/billing-account-post-upsert-response-201.json
+              upsertFailedExample: !include examples/responses/billing-account-post-upsert-failed-response-201.json 
+/contractEvent:
+  is:
+    - error-lib.http-error-response
+  post:
+    displayName: "Invoke contractEvent Apex class"
+    body:
+      application/json:
+        type: !include /contract-event.raml
+        example: !include /examples/contract-event.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: any
+            examples:
+              upsertedExample: !include examples/responses/billing-account-post-upsert-response-201.json
+              upsertFailedExample: !include examples/responses/billing-account-post-upsert-failed-response-201.json 
+/billingAccount/contractEvent/{company_uuid}:
+    displayName: Get billing account by company_uuid
+    uriParameters:
+        company_uuid:
+          type: string
+          required: true
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: !include /billingaccount-uuid-response.raml
+              example: !include /examples/billingaccount-get-by-account-uuid-response.json
+/billingAccount:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Search billing account by UUID
+    queryParameters:
+      uuid:
+        description: API required value with Billing Account UUID
+        type: string
+        required: true
+        example: 861f1c06-20b0-4ddf-8486-9e9cf5363232
+    responses:
+      "200":
+        description: Will return empty array if nothing matched
+        body:
+          application/json:
+            example: !include examples/billing-account-get-by-uuid-200-response-example.json
+            type: billingAccount-response
+  /{company_uuid}: 
+    displayName: Get billing account by company_uuid
+    uriParameters:
+        company_uuid:
+          type: string
+          required: true
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: !include /billingaccount-uuid-response.raml
+              example: !include /examples/billingaccount-get-by-account-uuid-response.json
+  /{uuid}: 
+    displayName: Get billing account by UUID
+    uriParameters:
+        uuid:
+          type: string
+          required: true
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: !include /billingaccount-uuid-response.raml
+              example: !include /examples/billingaccount-get-by-account-uuid-response.json
+  post:
+    displayName: "Upsert billing account by UUID"
+    body:
+      application/json:
+        type: billing-account-request
+        example: !include examples/billing-account-upsert-body-post-request.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: any
+            examples:
+              upsertedExample: !include examples/responses/billing-account-post-upsert-response-201.json
+              upsertFailedExample: !include examples/responses/billing-account-post-upsert-failed-response-201.json  
+
+
+/opportunity:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Search Opportunity by source_id
+    queryParameters:
+      source_id?:
+        type: string
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include examples/opportunity-200-response-example.json
+            items: opportunity
+      "204":
+        description: no content
+  post:
+    is:
+      - error-lib.http-error-response
+    displayName: Create new Opportunity
+    body:
+      application/json:
+        example: !include /examples/opportunity-post-request.json
+        type: opportunity
+    responses:
+      "201":
+        body:
+          application/json:
+            type: object
+            properties:
+              id:
+                type: string
+  patch:
+    displayName: Update opportunities
+    body:
+      application/json:
+        example: !include examples/opportunity-patch-request.json
+        items: sfUpdateOpportunityRequestType
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include examples/responses/opportunities-patch-response-200.json
+            type: any
+  /{membershipAgreementUUID}:
+      uriParameters:
+        membershipAgreementUUID:
+          type: string
+          required: false
+      get:
+        queryParameters:
+          transactionChannel:
+            type: string
+            required: false
+            example: "Kube"
+        displayName: Search Opportunity by membershipAgreementUUID
+        is:
+          - error-lib.http-error-response
+        responses:
+          "200":
+            body:
+              application/json:
+                example: !include examples/opportunityID.json
+                type: !include /dataTypes/opportunityId.raml
+          "204":
+            description: no content
+      post:
+        is:
+          - error-lib.http-error-response
+        displayName: Upsert Opportunity based on membershipAgreementUUID
+        body:
+          application/json:
+            type: !include /dataTypes/opportunity-salesrecord.raml
+            example: !include /examples/opportunity-salesrecord.json
+        responses:
+          "201":
+            body:
+              application/json:
+                type: object
+                properties:
+                  id:
+                    type: string
+  /contract:
+    get:
+      queryParameters:
+          opportunity_id:
+            type: string
+            required: false
+          contract_uuid:
+            type: string
+            required: false
+      displayName: Get opportunity by opportunityId or by contract_uuid
+      is:
+          - error-lib.http-error-response
+      responses:
+        200:
+          body:
+              application/json:
+                example: !include /examples/responses/opportunitybyId-200-response.json
+                type: !include /Types/opportunitybyId.raml
+    patch:
+        displayName: Update opportunity Object with Kube URL
+        body:
+          application/json:
+            example: !include /examples/responses/opportunity-by-id-kube-patch-request.json
+        responses:
+          "200":
+            body:
+              application/json:
+                example: !include /examples/responses/kube-url-patch-response.json 
+  /reservation:
+    get:
+      queryParameters:
+          reservation_uuid:
+            type: string
+            required: false
+      displayName: Get Reservation by reservationUUID
+      is:
+          - error-lib.http-error-response
+      responses:
+        200:
+          body:
+              application/json:
+                example: !include /examples/responses/opportunitybyId-200-response.json
+                type: !include /Types/opportunitybyId.raml
+
+  /id:
+    get:
+      queryParameters:
+          id:
+            type: string
+            required: false
+      displayName: Get Opportunity by Id for Tray Migration
+      is:
+          - error-lib.http-error-response
+      responses:
+        200:
+          body:
+              application/json:
+                example: !include /examples/responses/tray-opportunitybyID.json
+                type: !include /Types/tray-opportunityID.raml
+/salesrecord:
+  post:
+      is:
+          - error-lib.http-error-response
+      displayName: Create new salesrecord
+      body:
+        application/json:
+            type: !include /dataTypes/salesrecord-type.raml
+            example: !include /examples/salesrecord-request.json
+      responses:
+          "201":
+            body:
+              application/json:
+                type: object
+                properties:
+                  id:
+                    type: string
+        
+/tasks:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Search Tasks for specified criteria
+    description: At least one Query param required to be provieded
+    queryParameters:
+      WhatId:
+        description: Task's WhatId
+        type: string
+        required: false
+        example: a0R0G000013HpujUAC
+      ExternalId__c:
+        description: Task's ExternalId__c
+        type: string
+        required: false
+        example: 2369f93c-1893-4b26-a1cd-669f7b227ef3
+    responses:
+      "200":
+        description: Will return empty array if nothing matched
+        body:
+          items: task
+  post:
+    is:
+      - error-lib.http-error-response
+    displayName: Create new Task
+    body:
+      application/json:
+        type: task
+    responses:
+      "201":
+        body:
+          application/json:
+            type: object
+            properties:
+              id:
+                type: string
+  /{sfid}:
+    uriParameters:
+      sfid:
+        description: Task Salesforce ID
+        type: string
+        required: true
+        example: 00T0G00003XzMG3UAN
+    patch:
+      is:
+        - error-lib.http-error-response
+      displayName: Update Task
+      body:
+        application/json:
+          type: task
+      responses:
+        "200":
+          body:
+            application/json:
+              description: no-content
+              type: any
+    get:
+      displayName: Search Task by SFID
+      responses:
+        "200":
+          description: Will return empty object if nothing matched
+          body:
+            type: task
+/opportunities:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Search for opportunities by specified parameters
+    queryParameters:
+      IsRenewalOpportunity__c?:
+        type: boolean
+        example: false
+      Building__c?:
+        type: string
+        example: a00F000000MkxZzIAJ
+      IsClosed?:
+        type: boolean
+        example: true
+      Primary_Member__c?:
+        type: string
+        example: 0030G00002Owk6qQAB
+    responses:
+      "200":
+        body:
+          example: !include examples/responses/opportunities-get-by-specified-parameters-200.json
+          items: opportunity
+  /opportunityClosedWon:
+    is:
+      - error-lib.http-error-response
+    get:
+      displayName: Search Closed won Oppurtunities with lastmodified date
+      queryParameters: 
+        LastModifiedDate?:
+          type: string
+          example: "2023-01-09T14:58:49+0000"
+      responses:
+        200:
+          description: Array of Opportunties. Empty list if nothing found
+          body:            
+            application/json:
+              type: OpportunityclosedwonResponse[]
+              example: !include /examples/responses/get-parameters-by-lastmodifieddate.json  
+  /{sfid}:
+    uriParameters:
+      sfid:
+        description: Opportunity Salesforce ID
+        type: string
+        required: true
+        example: 0062I0000127dp1QAA
+    get:
+      displayName: Extracts a bunch of extra referral related fields from SFDC when the value of enrich data is referral
+      responses:
+        "200":
+          body:
+            application/json:
+              example: !include examples/responses/referral-opportunities-by-id-get-response-200.json
+              type: any
+    /referral:
+      is:
+        - error-lib.http-error-response
+      uriParameters:
+        sfid:
+          description: Opportunity Salesforce ID
+          type: string
+          required: true
+          example: 0062I0000127dp1QAA
+      get:
+        displayName: Extracts Referral ID for Opportunity ID
+        responses:
+          "200":
+            body:
+              application/json:
+                example: !include examples/responses/referral-opportunities-by-id-referral-get-response-200.json
+                type: any
+/submissions:
+  /contact:
+    is:
+      - error-lib.http-error-response
+    post:
+      displayName: Create Referral Contact in SF OrgC
+      body:
+        application/json:
+          example: !include examples/referral-submissions-contact-post-request.json
+          type: any
+      responses:
+        "200":
+          body:
+            application/json:
+              example: !include examples/responses/referral-submissions-contact-post-response-200.json
+              type: any
+    put:
+      displayName: Update Referral Contact in SF OrgC
+      body:
+        application/json:
+          example: !include examples/referral-submissions-update_contact-put-request.json
+          type: any
+      responses:
+        "200":
+          body:
+            application/json:
+              example: !include examples/responses/referral-submissions-update_contact-put-response-200.json
+              type: any
+  /referral:
+    is:
+      - error-lib.http-error-response
+    post:
+      displayName: Create new Referral in SF OrgC
+      body:
+        application/json:
+          example: !include examples/referral-submissions-referral-post-request.json
+          type: any
+      responses:
+        "200":
+          body:
+            application/json:
+              example: !include examples/responses/referral-submissions-referral-post-response-200.json
+              type: any
+  /lead:
+    is:
+      - error-lib.http-error-response
+    post:
+      displayName: Create Lead submission
+      body:
+        application/json:
+          example: !include examples/lead-submission-request.json
+          type: lead-submission
+      responses:
+        "201":
+          body:
+            application/json:
+              example: !include examples/responses/create-submission-response-201.json
+              type: any
+/member-insights:
+  is:
+    - error-lib.http-error-response
+  post:
+    displayName: Upsert member-insights
+    body:
+      application/json:
+        example: !include examples/member-insights-post-request.json
+        items: member-insights
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include examples/responses/member-insights-post-responce-200.json
+            type: any
+/groups:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Search for Groups
+    queryParameters:
+      name:
+        type: string
+        required: true
+        example: Community Team
+    responses:
+      "200":
+        body:
+          example: !include examples/responses/group-get-by-name-200.json
+          items: group
+/tours:
+  is:
+    - error-lib.http-error-response
+  post:
+    displayName: Create a new tour
+    body:
+      application/json:
+        example: !include examples/tour-creation-post-request.json
+        type: tour-creation
+    responses:
+      "201":
+        body:
+          application/json:
+            example: !include examples/responses/create-tour-response-201.json
+            type: any
+  get:
+    displayName: Get tours by specified criteria
+    description: Get tour by specified building and date
+    queryParameters:
+      building_id:
+        required: true
+        type: string
+        description: Building where tour is created
+        example: 21abf987-1328-41cf-a45c-cbc5829cacfd
+      date:
+        required: true
+        type: string
+        description: Date of the tour
+        example: 2022-02-08
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include examples/responses/get-tours-by-queryParams-response.json
+            type: any
+  /{tour_id}:
+    is:
+      - error-lib.http-error-response
+    uriParameters:
+      tour_id:
+        type: string
+        required: true
+        example: 08p540000009ynEAAQ
+        description: The ID of the tour
+    get:
+      displayName: Get a tour by id
+      description: Get a specific tour by tour id
+      responses:
+        "200":
+          body:
+            application/json:
+              example: !include examples/responses/get-tour-info-by-tourid.json
+              type: any
+    /reschedule:
+      is:
+        - error-lib.http-error-response
+      uriParameters:
+        tour_id:
+          type: string
+          required: true
+          example: 08p540000009yj2AAA
+          description: The ID of the tour
+      post:
+        displayName: Reschedule a Tour
+        description: Reschedule an existing tour
+        body:
+          application/json:
+            example: !include examples/tour-reschedule-post-request.json
+            type: tour-reschedule
+        responses:
+          "200":
+            body:
+              application/json:
+                example: !include examples/responses/tour-reschedule-response-200.json
+                type: any
+    /cancel:
+      is:
+        - error-lib.http-error-response
+      uriParameters:
+        tour_id:
+          type: string
+          required: true
+          example: 08p540000009ynEAAQ
+          description: The ID of the tour
+      post:
+        displayName: Tour cancel
+        body:
+          application/json:
+            type: any
+        responses:
+          "200":
+            body:
+              application/json:
+                example: !include examples/responses/tour-cancel-response.json
+                type: any
+/available-tour-time-slots:
+  is:
+    - error-lib.http-error-response
+  get:
+    displayName: Get Tour Availability
+    queryParameters:
+      building_id:
+        type: string
+        required: true
+        example: 21abf987-1328-41cf-a45c-cbc5829cacfd
+      start_date:
+        type: string
+        required: true
+        description: The date from, we want to get available tour times.
+        example: 2022-02-22T10:00:00.000
+      end_date:
+        type: string
+        required: true
+        description: The date to, we want to get available tour times.
+        example: 2022-02-22T22:00:00.000
+      tour_format:
+        type: string
+        required: true
+        description: Tour format, default to "In-Person" by MS if it is not specified
+        enum:
+          - In-Person
+          - Virtual
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include /examples/get-available-tour-timeslots.json
+            type: any
+/relatedContact:
+  /{uuid}:
+    is:
+      - error-lib.http-error-response
+    uriParameters:
+      uuid:
+        type: string
+    get:
+      description: Retrieve Related Contact by Uuid
+      responses:
+        "200":
+          body:
+            example: !include examples/responses/related-contact-get-request-example.json
+            type: !include dataTypes/related-contact-request-data.raml
+  type: resourceType
+
+/ekyc:
+  is: 
+    - error-lib.http-error-response
+  get:
+    description: return kyc data
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/responses/get-kyc-details-response.json
+
+  /status:
+    is:
+      - error-lib.http-error-response
+    patch:
+      body:
+        application/json:
+          type: !include Types/ekyc-status-put.raml
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include examples/responses/response-example-200.json
+
+  /questionnaire:
+    is:
+      - error-lib.http-error-response
+    put:
+      body:
+        application/json:
+          type: !include Types/ekyc-questionnaire-put.raml
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include examples/responses/response-example-200.json
+
+  /account:
+    is:
+      - error-lib.http-error-response
+    patch:
+      body:
+        application/json:
+          type: !include Types/ekyc-account-update.raml
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include examples/responses/response-example-200.json

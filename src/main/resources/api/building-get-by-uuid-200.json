@@ -1,0 +1,25 @@
+[
+  {
+    "Country__c": "USA",
+    "Time_Zone__c": "America/Los_Angeles",
+    "Postal_Code__c": "94111",
+    "UUID__c": "913826af-14e7-46d9-aa0d-9e0c21b4ece0",
+    "CurrencyIsoCode": "USD",
+    "Market__c": "a2VF0000002x1QdMAI",
+    "Name": "SF-Two Embarcadero Center",
+    "Address__c": "2 Embarcadero Center",
+    "City__c": "San Francisco",
+    "Building_ID__c": "SF11",
+    "Territory_Name__c": "California",
+    "Agency_Broker__c": "0030G00002coMnSQAU",
+    "Legal_Licensor_Name__c": "2 Embarcadero Center Tenant LLC",
+    "Community_Manager__c": "0030G00002euG79QAE",
+    "Id": "a000G00000OoOutQAF",
+    "Leasing_Director__c": "Ashley Green",
+    "State__c": "CA",
+    "Contract_Status__c": "active_contract",
+    "Email__c": "we-us-47926@wework.com",
+    "Location_No_City__c": "Two Embarcadero Center"
+  }
+]
+

@@ -1,0 +1,70 @@
+#%RAML 1.0 DataType
+description: Request body to get a record in salesforce.
+type: object
+properties:
+  UUID__c: 
+    required: true
+    type: string
+  Name: 
+    required: false
+    type: string | nil
+  Office_Work_Station_Number__c: 
+    required: false
+    type: string | nil
+  Status_Right_Now__c: 
+    required: false
+    type: string | nil
+  Status__c: 
+    required: false
+    type: string | nil
+  Archived_On__c: 
+    required: true
+    type: string | nil
+  Open_Date__c: 
+    required: false
+    type: string | nil
+  Office_Capacity__c: 
+    required: false
+    type: string | nil
+  Monthly_Price__c: 
+    required: false
+    type: string | nil
+  Next_Move_In__c: 
+    required: false
+    type: string | nil
+  Next_Move_Out__c: 
+    required: false
+    type: string | nil
+  Last_Move_In__c: 
+    required: false
+    type: string | nil
+  Last_Move_Out__c: 
+    required: false
+    type: string | nil
+  Building__r: 
+    type: object
+    properties:
+      UUID__c: 
+        required: true
+        type: string
+      Id: 
+        required: false
+        type: string | nil
+      type:
+        required: false
+        type: string | nil
+  Floor__c: 
+    required: false
+    type: string | nil
+  Office_Work_Station_Type__c: 
+    required: false
+    type: string | nil
+  Space_UUID__c: 
+    required: false
+    type: string | nil
+  Notes__c: 
+    required: false
+    type: string | nil
+  Physical_Desk_Count__c: 
+    required: false
+    type: string | nil

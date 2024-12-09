@@ -1,0 +1,12 @@
+#%RAML 1.0 DataType
+
+description: Represents an Reservation Object in SFDC.
+type: object
+properties:
+  Id: string
+  UUID__c: string
+  Started_On__c?: date-only
+  Ended_On__c?: date-only | nil
+  Reservable__c?: string
+  Billing_Account__c?: string
+  Reservation_Status__c: string

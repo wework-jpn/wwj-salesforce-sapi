@@ -1,0 +1,189 @@
+#%RAML 1.0 DataType
+
+type: object
+properties:
+         first_name:
+           type: string
+           required: true
+         last_name:
+           type: string
+           required: true
+         contact_uuid:
+           type: string
+           required: false
+         email:
+           type: string
+           required: true
+         phone:
+           type: string
+           required: false
+         notes:
+           type: string
+           required: false
+         locale:
+           type: string
+           required: false
+         country_code:
+           type: string
+           required: false
+         company_name:
+           type: string
+           required: false
+         company_size:
+           type: string
+           required: false
+         account_uuid:
+           type: string
+           required: false
+         company_industry:
+           type: string
+           required: false
+         move_in_time_frame:
+           type: string | nil
+           required: false 
+         target_move_in_date:
+           type: string | nil
+           required: false 
+         lead_source:
+           type: string
+           required: false
+         lead_type:
+           type: string
+           required: false
+         lead_source_subtype:
+           type: string
+           required: false
+         lead_source_detail:
+           type: string
+           required: false     
+         buildings_interested_uuids:
+           type: array
+           required: false
+           items:
+             type: string
+         market_uuids:
+           type: array
+           required: false
+           items:
+             type: string
+         product_interests:
+           type: array
+           required: false
+           items:
+             type: string
+         marketing_consent:
+           type: boolean
+           required: false
+         t_and_cs_content: 
+           type: boolean
+           required: false
+         affiliates_consent:
+           type: boolean
+           required: false
+         first_referring_domain:
+           type: string
+           required: false
+           maxLength: 5000
+         heap_id:
+           type: string
+           required: false
+         utm_campaign:
+           type: string
+           required: false
+         utm_content:
+           type: string
+           required: false
+         utm_medium:
+           type: string
+           required: false
+         utm_source:
+           type: string
+           required: false
+         utm_term:
+           type: string
+           required: false
+         reservable_interested_in_uuid:
+           type: string
+           required: false
+         desks_interested_min:
+           type: string
+           required: false
+         desks_interested_max:
+           type: string
+           required: false
+         desks_interested_range:
+           type: string
+           required: false
+         promo_code:
+           type: string
+           required: false
+         referral_code:
+           type: string
+           required: false
+         campaign_sfid:
+           type: string
+           required: false
+         quick_quote_location:
+           type: string
+           required: false
+         lead_address:
+           type: object
+           required: false
+           properties:
+             street:
+               type: string
+               required: false
+             city:
+               type: string
+               required: false
+             state:
+               type: string
+               required: false
+             country:
+               type: string
+               required: false
+             zip:
+               type: integer
+               required: false
+         google_analytics:
+           type: object
+           required: false
+           properties:
+             dclid:
+              type: string
+              required: false 
+             gaclientid:
+               type: string
+               required: false 
+             gauserid: 
+               type: string
+               required: false
+             gatrackid:
+               type: string
+               required: false
+             gclid:
+               type: string
+               required: false 
+             gclsrc: 
+               type: string
+               required: false
+         full_url:
+           type: string
+           required: false
+           maxLength: 5000
+         create_source:
+           type: string
+           required: false
+         segment_id:
+           type: string
+           required: false
+         email.sha256:
+           type: string
+           required: false
+         loyalty_program:
+           type: string
+           required: false
+         loyalty_number:
+           type: string
+           required: false
+

@@ -1,0 +1,35 @@
+#%RAML 1.0 DataType
+type:
+  object
+properties:
+  start_date:
+    type: string | nil
+    required: false
+  reservation_uuid:
+    type: string | nil
+    required: false
+  reservable_uuid:
+    type: string | nil
+    required: false
+  quantity:
+    type: string | nil | integer
+    required: false
+  price:
+    type: number
+    format: double
+    required: false
+  commitment:
+    type: string | nil
+    required: false
+  building_uuid:
+    type: string | nil
+    required: false
+  currencyVal:
+    type: string | nil
+    required: false
+  reservationtype:
+    type: string | nil
+    required: false
+  company_uuid:
+    type: string | nil
+    required: false

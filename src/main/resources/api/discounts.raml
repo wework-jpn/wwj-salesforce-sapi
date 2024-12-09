@@ -1,0 +1,15 @@
+#%RAML 1.0 DataType
+    properties:
+      end_date: 
+        type: string | nil
+        required: false
+      amount: 
+        type: number
+        format: double
+        required: false
+      building_uuid:
+        type: string | nil | integer
+        required: false
+      start_date:
+        type: date-only | nil
+        required: false

@@ -1,0 +1,84 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+      membership_agreement_uuid:
+        type: string | nil | integer
+        required: false
+      company_uuid:
+        type: string | nil | integer
+        required: false
+      primary_member_email:
+        type: string | nil | integer
+        required: false
+      community_manager_uuid:
+        type: string | nil | integer
+        required: false 
+      contract_pdf:
+        type: string | nil | integer
+        required: false  
+      original_contract_uuid:
+        type: string | nil | integer
+        required: false
+      currencyVal:
+        type: string | nil | integer
+        required: false
+      event_name:
+        type: string | nil | integer
+        required: false
+      opportunity_id:
+        type: string | nil | integer
+        required: false
+      downgrade_reason:
+        type: string | nil | integer
+        required: false  
+      downgrade_notes:
+        type: string | nil | integer
+        required: false
+      transfer_type:
+        type: string | nil | integer
+        required: false
+      contract_date:
+        type: string | nil | integer
+        required: false
+      contract_expires_at:
+        type: string | nil | integer
+        required: false
+      from_opportunity:
+        type: string | nil | integer
+        required: false
+      partial_cancel:
+        type: string | nil | integer | boolean
+        required: false
+      lead_source:
+        type: string | nil | integer
+        required: false
+      lead_source_detail:
+        type: string | nil | integer
+        required: false
+      notice_period:
+        type: integer | nil | string
+        required: false
+      move_ins: 
+        required: false
+        type: array
+        items: [!include move_in_out.raml]
+      move_outs:
+        required: false
+        type: array
+        items: [!include move_in_out.raml]
+      amendments:
+        required: false
+        type: array
+        items: [!include move_in_out.raml]
+      products:
+        required: false
+        type: array
+        items: [!include products.raml]
+      discounts:
+        required: false
+        type: array
+        items: [!include discounts.raml]
+      
+
+
+          

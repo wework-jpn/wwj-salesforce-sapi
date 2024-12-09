@@ -1,0 +1,9 @@
+ {
+                "start_date": "2023-01-11",
+                "reservation_uuid": "71d6788e-b0f8-4d88-b7ba-64643447f2c2",
+                "reservable_uuid": "a574f7f8-f142-43af-a96a-bfc0c3ef7376",
+                "quantity": "1",
+                "price": 149.00,
+                "commitment": null,
+                "building_uuid": "da075775-0b2b-4bc7-bdda-96b4aa5ffc19"
+            }
