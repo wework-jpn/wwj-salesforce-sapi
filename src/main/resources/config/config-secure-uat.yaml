@@ -1,7 +1,13 @@
+anypoint.platform:
+  client_secret: "![eMJBxOWObU/s0m00FAUdEP+QhC3IsQUu63tGDvH/a6AJRLnC0bATsQ==]"
+  
 certificates:
   keystore:
-    password: "![]"
-
+    password: "![qTpUPDTCWGvgg8YJXveBj0BA1JUPptHO]"
+  
+rollbar:
+  accesstoken: "![]"
+  
 sf:
   consumer-key: "![]"
   consumer-secret: "![]"

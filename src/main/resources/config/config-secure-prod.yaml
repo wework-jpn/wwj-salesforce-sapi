@@ -1,6 +1,12 @@
-kcertificates:
+anypoint.platform:
+  client_secret: "![]"
+  
+certificates:
   keystore:
     password: "![]"
+
+rollbar:
+  accesstoken: "![]"
 
 sf:
   consumer-key: "![]"

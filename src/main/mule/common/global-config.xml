@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
-	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
-	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
-	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
 http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
-http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
 	
 	<http:listener-config name="wwj-salesforce-sapi-httpListenerConfig">
-        <http:listener-connection host="0.0.0.0" port="${https.port}" tlsContext="TLS_Context" protocol="HTTPS" readTimeout="${https.timeout}"/>
+        <http:listener-connection host="0.0.0.0" port="${listener.port.http}"/>
     </http:listener-config>
     <apikit:config name="wwj-salesforce-sapi-config" api="wwj-salesforce-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     
@@ -21,13 +24,93 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 		<salesforce:oauth-user-pass-connection consumerKey="${secure::sf.consumer-key}" consumerSecret="${secure::sf.consumer-secret}" username="${sf.username}" password="${secure::sf.password}" tokenEndpoint="${sf.token-endpoint}" />
 	</salesforce:sfdc-config>
 	<configuration-properties doc:name="Configuration properties" doc:id="fbc73cc0-5c45-4691-b570-f8d5aac29122" file="config/config-${env}.yaml" />
-	<configuration doc:name="Configuration" doc:id="de2eb2e3-aa97-4464-a377-2ac454c150a6" defaultErrorHandler-ref="APIKIT-Error-Handler" />
-	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="aeb90c03-998f-4eca-bdba-fb5bfe902c90" environment="${env}" applicationName="${api.name}" applicationVersion="${api.version}"/>
-	<tls:context name="TLS_Context" doc:name="TLS Context" doc:id="686c039b-fac2-4250-b34c-7404f49b10c5" >
-		<tls:key-store type="pkcs12" path="${certificates.keystore.path}" alias="${certificates.keystore.alias}" keyPassword="${secure::certificates.keystore.password}" password="${secure::certificates.keystore.password}" />
-	</tls:context>
+	<configuration-properties doc:name="Configuration properties" doc:id="df7beecd-c70a-4e42-bc96-dcac1302adc3" file="config/json-logger.properties" />
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="51a14e85-2bb6-4b0d-9f5e-fd64cbb05209" environment="#[p('env')]" contentFieldsDataMasking="${json.logger.contentFieldsDataMasking}" applicationName="#[p('json.logger.application.name')]" applicationVersion="#[p('json.logger.application.version')]"/>
 	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="145f4006-69a1-4607-827e-0e5986af4d43" file="config/config-secure-${env}.yaml" key="${key}" >
 		<secure-properties:encrypt algorithm="Blowfish" />
 	</secure-properties:config>
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="bdb6e818-49f3-49be-875b-ae2b2782e3d0" flowRef="wwj-salesforce-sapi-main" />
 	
+	<!-- 	<tls:context name="TLS_Context" doc:name="TLS Context" doc:id="25fb6ada-e17e-4519-8042-63d57468e318" >
+		<tls:key-store type="pkcs12" path="${certificates.keystore.path}" alias="${certificates.keystore.alias}" keyPassword="${secure::certificates.keystore.password}" password="${secure::certificates.keystore.password}" />
+	</tls:context> -->
+	<configuration doc:name="Configuration" doc:id="9a8827af-2939-4716-b40f-d169d3c18d2a" defaultErrorHandler-ref="GlobalOrgcSapiErrorHandler" />
+   
+	<error-handler name="GlobalOrgcSapiErrorHandler" doc:id="ea90a112-c328-48d8-9f9c-d629a0bce4ad">
+        <on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="470dce11-331d-44be-8cb0-9276b3403a71" type="ANY">
+            <try doc:name="Try" doc:id="1a0202ae-11bd-47a8-8c28-945d72c73275">
+                <json-logger:logger doc:name="Start of Rollbar Flow" doc:id="68a78a1f-7b0e-42a4-a694-13a04c5c6499" config-ref="JSON_Logger_Config" message="Start of Rollbar Flow" tracePoint="BEFORE_REQUEST" />
+				<ee:transform doc:name="Set error message var" doc:id="f444aed3-933b-40aa-abeb-abe7c8a60480">
+                    <ee:message />
+                    <ee:variables>
+						<ee:set-variable resource="dwl/error-message.dwl" variableName="error" />
+                    </ee:variables>
+                </ee:transform>
+                <logger level="INFO" doc:name="error message" doc:id="41531c36-dad9-4f09-807d-4114ab42b463" message="#[vars.error.errsfmessage]" />
+                <ee:transform doc:name="Prepare Error Message" doc:id="9b4e3d26-017c-445f-b3f5-d69d0ba88429">
+                    <ee:message />
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
+						<ee:set-variable resource="dwl/error-transformed.dwl" variableName="error_transformed" />
+                    </ee:variables>
+                </ee:transform>
+                <ee:transform doc:name="tour sheduler variable intialization" doc:id="ed7cd6eb-7362-4be9-bca8-58556952ceec">
+                    <ee:message />
+                    <ee:variables>
+                        <ee:set-variable variableName="SchedulerPayload"><![CDATA[%dw 2.0
+output application/java
+---
+write(vars.SchedulerPayload, "application/json") as String default ""]]></ee:set-variable>
+                        <ee:set-variable variableName="isSchedulerFlag"><![CDATA[vars.isSchedulerFlag default ""]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+                <!-- [STUDIO:"isSchedulerFlag"]				<set-variable value='#[vars.isSchedulerFlag default ""&#93;' doc:name="isSchedulerFlag" doc:id="57624e48-ede1-4b06-8908-7879e12630c1" variableName="isSchedulerFlag" /> [STUDIO] -->
+				<set-payload value="#[%dw 2.0&#xA;output application/json&#xA;---&#xA;vars.error_transformed.ErrorDescription ++ vars.isSchedulerFlag ++ vars.SchedulerPayload]" doc:name="Set Payload" doc:id="d9599ff7-fcba-4cc1-970e-5a894a7c3261" />
+                <set-variable value="#[vars.error_transformed.ErrorDescription]" doc:name="ErrorDescription" doc:id="c7c2331e-2af2-4b21-995d-156cce8ea9b2" variableName="ErrorDescription" />
+                <logger level="INFO" doc:name="ErrorDescription" doc:id="b81032d5-3fdd-4d8a-918a-609b5054bf83" message="Error is: #[vars.ErrorDescription]" />
+                <ee:transform doc:name="isIgnoreError" doc:id="ff3ea779-a209-4e9e-9e5c-eeec9a3c4464">
+                    <ee:message />
+                    <ee:variables>
+						<ee:set-variable resource="dwl/error-ignore.dwl" variableName="isIgnoreError" />
+                    </ee:variables>
+                </ee:transform>
+                <choice doc:name="check is it http or queqe" doc:id="f3408534-020f-4396-a6bb-3a4797feef0e">
+                    <when expression="#[vars.isIgnoreError]">
+                        <logger level="INFO" doc:name="Ignore error" doc:id="df4d4c58-3ecb-4589-bb7f-ca1219bf85c8" message="Error occured for the given transaction and will be sent to upper layer and not logged to rollbar in SAPI" />
+                    </when>
+                    <otherwise>
+                        <json-logger:logger doc:name="Invoking Rollbar" doc:id="948a1d2b-e948-47c9-859e-d542d23232a3" config-ref="JSON_Logger_Config" message="Invoking Rollbar" tracePoint="BEFORE_REQUEST" />
+						<flow-ref doc:name="call-rollbar-sub-flow" doc:id="f1a538a3-5188-48da-8930-12c4136325d1" name="call-rollbar-sub-flow" />
+                    </otherwise>
+                </choice>
+                <json-logger:logger doc:name="End of Rollbar Flow" doc:id="0541eb7b-b2d4-4938-a351-9e2ec266d29d" config-ref="JSON_Logger_Config" message="End of Rollbar Flow" tracePoint="BEFORE_REQUEST" />
+				<error-handler>
+                    <on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="68692923-8ec4-4ba4-8f58-d68faee017f3">
+						<json-logger:logger doc:name="Message" doc:id="a65fa3cc-42ad-408a-b400-e88f3493f98a" config-ref="JSON_Logger_Config" message="Message" tracePoint="END" >
+							<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    message: "Error in Global Error Handler"
+}]]]></json-logger:content>
+						</json-logger:logger>
+                    </on-error-continue>
+                </error-handler>
+            </try>
+        </on-error-propagate>
+    </error-handler>
+    <sub-flow name="call-rollbar-sub-flow" doc:id="a03045d6-e706-41d3-9d14-0eeb80292b5a">
+        <ee:transform doc:name="Set Rollbar var" doc:id="74363fd6-6d46-43fa-b984-660fd1668078">
+            <ee:message />
+            <ee:variables>
+				<ee:set-variable resource="dwl/rollbar-request.dwl" variableName="rollbar_transform" />
+            </ee:variables>
+        </ee:transform>
+        <choice doc:name="Check Envrionment" doc:id="e635f7b1-1630-4c39-a6f5-895bbfbea7d2">
+            <when expression="#[Mule::p('rollbar.environment') == 'production']">
+				<json-logger:logger doc:name="Request to Rollbar" doc:id="3224779e-fab1-45d5-bd99-a6d772292958" config-ref="JSON_Logger_Config" message="Request to Rollbar" tracePoint="BEFORE_REQUEST" />
+            </when>
+            <otherwise>
+				<json-logger:logger doc:name="No Request to Rollbar" doc:id="4bb66589-eb82-4691-ba4c-d666fbab2afb" config-ref="JSON_Logger_Config" message="No Request to Rollbar" tracePoint="BEFORE_REQUEST" />
+            </otherwise>
+        </choice>
+    </sub-flow>
 </mule>
