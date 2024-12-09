@@ -1,0 +1,12 @@
+{
+    "uuid": "121ds-21dsdd-212sdf-121sdf",
+    "id": "0010300000Lrj0BAAR",
+    "name": "Mulesoft-Get Account Info-Test1",
+    "status": "active",
+    "accountSubType":"Partner",
+    "accountType":"Org",
+    "allowMerge":true,
+    "countryCode":"US",
+    "iDStatus2":"Active",
+    "updateHQMarketStatus":"Completed"
+}

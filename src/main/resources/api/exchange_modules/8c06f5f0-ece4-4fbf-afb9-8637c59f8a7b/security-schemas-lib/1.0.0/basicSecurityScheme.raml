@@ -1,0 +1,9 @@
+#%RAML 1.0 SecurityScheme
+type: Pass Through
+describedBy:
+ headers:
+   Authorization:
+     type: string
+ responses:
+   401:
+     description: Unauthorized or invalid client application credentials

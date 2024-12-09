@@ -1,0 +1,92 @@
+#%RAML 1.0 ResourceType
+
+description: Collection resource type
+
+get?:
+  description: Retrieve a list of <<resourcePathName | !singularize>>
+  displayName: Get <<resourcePathName | !singularize>>
+  is:
+    - returns-400
+    - returns-404
+    - returns-401
+    - returns-403
+    - returns-500
+  
+  responses:
+    200:
+      body:
+        application/json:
+          type: <<get-response-data-type>>[]
+ 
+post?:
+  description: Add new <<resourcePathName | !singularize>>
+  displayName: Post <<resourcePathName | !singularize>>
+  body:
+    application/json:
+      type: <<post-collection-data-type>>[]
+  is:
+    - returns-401
+    - returns-403
+    - returns-500
+    
+  responses: 
+    201:
+      description: Resource created.
+    202:
+      description: The request has been accepted for processing. Use the URI provided in the Location header of the response to monitor the status.
+      headers: 
+        Location:
+          description: URL of the new <<resourcePathName | !singularize>> information
+          example: /<<resourcePathName>>/1234/status
+      body:
+put?:
+  description: Update new <<resourcePathName | !singularize>>
+  displayName: Update <<resourcePathName | !singularize>>
+  body:
+    application/json:
+      type: <<put-collection-data-type>>
+      example: <<put-collection-example>>
+  is:
+    - returns-401
+    - returns-403
+    - returns-500
+    
+  responses: 
+    200:
+      description: Resource updated.
+      body:
+        application/json:
+          type: <<put-response-200-collection-data-type>>
+          example: <<put-response-200-collection-example>>
+    201:
+      description: Resource Created.
+      body:
+        application/json:
+          type: <<put-response-201-collection-data-type>>
+          example: <<put-response-201-collection-example>>       
+    202:
+      description: The request has been accepted for processing. Use the URI provided in the Location header of the response to monitor the status.
+      headers: 
+        Location:
+          description: URL of the new <<resourcePathName | !singularize>> information
+          example: /<<resourcePathName>>/1234/status
+      body:
+patch?:
+  description: Update new <<resourcePathName | !singularize>>
+  displayName: Update <<resourcePathName | !singularize>>
+  body:
+    application/json:
+      type: <<patch-collection-data-type>>
+      example: <<patch-collection-example>>
+  is:
+    - returns-401
+    - returns-403
+    - returns-500
+  responses: 
+    200:
+      description: Resource updated.
+      body:
+        application/json:
+          type: <<patch-response-200-collection-data-type>>
+          example: <<patch-response-200-collection-example>>
+    204:

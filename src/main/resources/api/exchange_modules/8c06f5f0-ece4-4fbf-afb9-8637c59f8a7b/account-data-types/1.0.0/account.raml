@@ -1,0 +1,193 @@
+#%RAML 1.0 DataType
+properties:
+  uuid:
+    type: string
+  name:
+    type: string
+  id?:
+    type: string
+  status?:
+    type: string
+  accountCreationSource?:
+    enum:
+    - Batch - BatchToFindParentAccount   
+  accountFTE?:
+    type: number
+  accountManagerLookup?:
+    type: any
+  accountOwnerRecordTypeForBatch?:
+    type: string
+  accountSubType?:
+    enum:
+      - Broker
+      - Partner
+      - Potential Partner
+      - Affiliate
+      - Real Estate
+  accountType?:
+     enum:
+      - Org
+      - Sales
+  allowMerge?:
+    type: boolean
+  cleansedAccountName?:
+    type: string
+  cleansedUnomyCompanyName?:
+    type: string
+  companyType?:
+    type: any
+  countryCode?:
+    enum:
+      - TBD
+      - US
+  isDeleted?:
+    type: boolean
+  doNotContactwithoutACManager?:
+    type: boolean
+  externalAccountId?:
+    type: string
+  externalParentOrgId?:
+    type: string
+  forcefullyAccountAssignment?:
+    type: boolean
+  geography?:
+    type: !include geography.raml
+  billingAddress?:
+    type: string
+  billingCity?:
+    type: string
+  billingCountry?:
+    type: string
+  billingState?:
+    type: string
+  billingStreet?:
+    type: string
+  billingPostalCode?:
+    type: string
+  iDStatus2?:
+     enum:
+      - Active
+      - Inactive
+      - Past Member
+      - Prospect
+  industry?:
+    enum:
+      - TBD
+  interestedinNumberofDesks?:
+    type: number
+  isMerged?:
+    type: boolean
+  lastActivityDate?:
+    type: date-only
+  lastModifiedById?:
+    type: any
+  lastModifiedDate?:
+    type: date-only
+  leadSource?:
+    type: string
+  leadSourceSubType?:
+    enum:
+      - TBD
+  legalName?:
+    type: string
+  lostOpportunities?:
+    type: number
+  location_uuid?:
+    type: string
+  primaryMember?:
+    type: !include contact.raml
+  primaryMemberEmail?:
+    type: string
+  market?:
+    enum:
+      - TBD
+  masterAccount?:
+    type: boolean
+  memberStory?:
+    type: any
+  namedAccountSegment?:
+    enum:
+      - Emerging Account
+      - Global Account
+      - Growth Account
+      - Strategic Account
+      - Government Account
+      - Bullpen
+      - East Account
+      - West Account
+      -	LATAM
+  nextSteps?:
+    type: string
+  noofopportunities?:
+    type: number
+  numberofFullTimeEmployees?:
+    type: number
+  numberofOpportunityReservables?:
+    type: any
+  parentOrgName?:
+    type: string
+  orgIdentificationStatus?:
+     enum:
+      - Pending
+      - Processed
+  orgName?:
+    type: string
+  ownerId?:
+    type: any
+  ownerProfile?:
+    type: string
+  ownerSalesFunction?:
+    type: string
+  parentId?:
+    type: string
+  parentOrg?:
+    type: string
+  parentOrgId?:
+    type: string
+  parentUUID?:
+    type: string
+  photoUrl?:
+    type: string
+  potential?:
+    type: boolean
+  potentialMatchIds?:
+    type: string
+  printer_login?:
+    type: number
+  printer_pin?:
+    type: string
+  processingStage?:
+    type: string
+  reassignmentOnUserDeactivation?:
+    type: boolean
+  recordTypeId?:
+    type: string
+  nickname?:
+    type: string
+  signedMSA?:
+    type: boolean
+  totalBuildings?:
+    type: any
+  totalCurrentDesks?:
+    type: number
+  totalDesksSold?:
+    type: any
+  totalSpaceLeased?:
+    type: any
+  cICompany?:
+    type: any
+  unomyCompanyID?:
+    type: number
+  unomyCompanyIDFormula?:
+    type: number
+  cIUpdatedDateTime?:
+    type: datetime
+  updateHQMarketStatus?:
+    enum:
+      - Pending
+      - Completed
+      - Retry Round 1
+      - Retry Round 2
+  
+  website?:
+    type: string

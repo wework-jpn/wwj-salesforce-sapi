@@ -1,0 +1,16 @@
+{
+  "contactID" : "50f50f52-0d41-4a08-85ea-56423b2803c8",
+  "accountUUID" : "50f50f52-0d41-4a08-85ea-56423b2803c8",
+  "accountId" : "50f50f52-0d41-4a08-85ea-56423b2803c8",
+  "accountName" : "Awesome Co",
+  "accountStatus" : "active",
+  "email" : "accountassignment8603592146@example.com",
+  "name" : "john.smith",
+  "uuid" : "50f50f52-0d41-4a08-85ea-56423b2803c8",
+  "phone" : "3103772609",
+  "location" : "50f50f52-0d41-4a08-85ea-56423b2803c8",
+  "locale" : "locale",
+  "language" : "language",
+  "roles" : "roles",
+  "statusID" : "active"
+}

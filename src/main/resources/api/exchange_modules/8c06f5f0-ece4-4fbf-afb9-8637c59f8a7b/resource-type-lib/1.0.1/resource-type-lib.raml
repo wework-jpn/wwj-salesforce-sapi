@@ -1,0 +1,55 @@
+#%RAML 1.0 Library
+usage: This is common resource type library which can be used in API implementation
+resourceTypes:
+  items:
+    !include resource_types/collection-resource-type.raml
+  item:
+    !include resource_types/member-resource-type.raml
+  healthcheck:
+    !include resource_types/healthcheck-resource-type.raml 
+
+uses:
+  commonerrorlib: /exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/common-error-lib/1.0.1/common-error-lib.raml
+types:
+   healthcheckDataType: !include data_types/healthcheck-data-type.raml
+   errorDataType: commonerrorlib.errorDataType
+
+traits:
+  returns-500: 
+    responses:
+      500:
+        body:
+          application/json:
+            type: errorDataType
+            example: !include ../exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/common-error-lib/1.0.1/examples/http-error-500-example.raml
+    
+  returns-400:
+    responses:
+      400:
+        body:
+          application/json:
+            type: errorDataType
+            example: !include ../exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/common-error-lib/1.0.1/examples/http-error-400-example.raml
+      
+  returns-401:
+    responses:
+      401:
+        body:
+          application/json:
+            type: errorDataType
+            example: !include ../exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/common-error-lib/1.0.1/examples/http-error-401-example.raml
+  returns-403: 
+    responses:
+      403:
+        body:
+          application/json:
+            type: errorDataType
+            example: !include ../exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/common-error-lib/1.0.1/examples/http-error-403-example.raml
+  returns-404:  
+    responses:
+      404:
+        body:
+          application/json:
+            type: errorDataType
+            example: !include ../exchange_modules/8c06f5f0-ece4-4fbf-afb9-8637c59f8a7b/common-error-lib/1.0.1/examples/http-error-404-example.raml
+

@@ -1,0 +1,76 @@
+#%RAML 1.0 DataType
+description: Request body to fetch 'closed won' Opportunities in SF Legacy
+type: object
+properties:
+  Account: 
+    required: false 
+    type: string
+  GACLIENTID__c: 
+    required: false
+    type: string
+  GATRACKID__c: 
+    required: false
+    type: string
+  GAUSERID__c: 
+    required: false
+    type: string
+  LeadSource: 
+    required: false
+    type: string
+  LeadSource_Sub_Type__c: 
+    required: false
+    type: string
+  Lead_Source_Detail__c: 
+    required: false
+    type: string
+  Opportunity_Account_Name__c: 
+    required: false
+    type: string
+  utm_campaign__c: 
+    required: false
+    type: string
+  utm_campaign_id__c: 
+    required: false
+    type: string
+  Building_Name__c: 
+    required: false
+    type: string
+  Portfolio_Name__c: 
+    required: false
+    type: string
+  StageName: 
+    required: true
+    type: string
+  Id: 
+    required: false
+    type: string
+  CloseDate: 
+    required: false
+    type: date-only
+  Gross_TCV__c: 
+    required: false
+    type: string
+  TCV_Default_lCurrency__c: 
+    required: false
+    type: string
+  Segment__c: 
+    required: false
+    type: string
+  No_of_Desks_gross__c: 
+    required: false
+    type: string
+  Product_Group__c:
+    required: false
+    type: string
+  Total_Number_of_Tour__c:
+    required: false
+    type: string	
+  Number_of_Completed_Tours__c: 
+    required: false
+    type: string
+  Gross_ACV__c: 
+    required: false
+    type: string
+  Broker_Involvement_Indicated__c: 
+    required: false
+    type: string  

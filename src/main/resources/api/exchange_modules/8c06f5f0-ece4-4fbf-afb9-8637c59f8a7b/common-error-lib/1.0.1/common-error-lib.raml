@@ -1,0 +1,12 @@
+#%RAML 1.0 Library
+usage: This is the common error response format library
+types:
+  errorDataType: !include data_types/error-data-type.raml
+
+traits:
+  http-error-response: !include error_traits/http-response-trait.raml
+  returns-500: !include error_traits/http-500-response-trait.raml
+  returns-404: !include error_traits/http-404-response-trait.raml
+  returns-401: !include error_traits/http-401-response-trait.raml
+  returns-400: !include error_traits/http-400-response-trait.raml
+  returns-403: !include error_traits/http-403-response-trait.raml

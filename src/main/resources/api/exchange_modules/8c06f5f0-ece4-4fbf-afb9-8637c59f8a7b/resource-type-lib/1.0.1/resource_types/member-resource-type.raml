@@ -1,0 +1,102 @@
+#%RAML 1.0 ResourceType
+get?:
+  description: Retrieve a/an <<resourcePathName | !singularize>> with a    specific        <<resourcePathName | !singularize >>
+  displayName: Get a/an <<resourcePathName | !singularize>> by <<resourcePathName | !singularize>> ID
+  is:
+    - returns-400
+    - returns-404
+    - returns-401
+    - returns-403
+    - returns-500
+  responses: 
+    200:
+      body:
+        application/json: 
+          type: <<get-response-data-type>>
+          examples: <<get-response-example>>
+post?:
+  description: Add  new <<resourcePathName | !singularize>>
+  displayName: Post <<resourcePathName | !singularize>>
+  body:
+    application/json:
+      type: <<post-data-type>>
+      example: <<post-example>>
+  is:
+    - returns-401
+    - returns-403
+    - returns-500
+   
+  responses:
+      200:
+        body:
+          application/json:
+            type: <<post-response-200-data-type>>
+            example: <<post-response-200-example>> 
+      201:
+        description: Resource created.
+        headers: 
+          Location:
+            description: URL of the new <<resourcePathName | !singularize>> location
+            example: /<<resourcePathName>>/1234/status
+      202:
+        description: The request has been accepted for processing. Use the URI provided in the Location header of the response to monitor the status.
+        headers: 
+          Location:
+            description: URL of the new <<resourcePathName | !singularize>> status
+            example: /<<resourcePathName>>/1234/status
+        
+patch?:
+  description: Update a specific <<resourcePathName | !singularize>>  info 
+  displayName: Update a/an <<resourcePathName | !singularize>> by <<resourcePathName | !singularize>> ID
+  is:
+    - returns-401
+    - returns-403
+    - returns-500
+  
+  body:
+    application/json:
+      type: <<patch-data-type>>
+  responses: 
+    204:
+  
+delete?:
+  description: Delete a specific <<resourcePathName | !singularize>>
+  displayName: Delete a/an <<resourcePathName | !singularize>> by <<resourcePathName | !singularize>> ID
+  is:
+    - returns-401
+    - returns-403
+    - returns-500
+    - returns-404
+  responses: 
+    200:
+      body:
+        application/json:
+          example:
+            {"message":"Resource has been deleted"}
+    202:
+      description: The request has been accepted for processing. Use the URI provided in the Location header of the response to monitor the status.
+      headers: 
+        Location:
+          description: URL of the new <<resourcePathName | !singularize>> information
+          example: /<<resourcePathName>>/1234/status
+      
+    204:
+      description: There is no content to be sent
+            
+put?:
+  body:
+    application/json:
+      type: <<put-data-type>>
+      example: <<put-example>>
+  is:
+    - returns-401
+    - returns-403
+    - returns-500
+  responses: 
+    200:
+      body:
+        application/json:
+          type: <<put-response-200-data-type>>
+          example: <<put-response-200-example>>
+    202:
+      body:

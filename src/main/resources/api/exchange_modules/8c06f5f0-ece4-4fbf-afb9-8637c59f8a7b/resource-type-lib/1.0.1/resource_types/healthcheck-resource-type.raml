@@ -1,0 +1,15 @@
+#%RAML 1.0 ResourceType
+get:
+  description: Common method used across all the API's, returns health of API. Return Status 200 and success if the APi is Running and accepting requests.
+  is:
+    - returns-400
+    - returns-404
+    - returns-401
+    - returns-403
+    - returns-500
+  responses:
+    200:
+      body:
+        application/json:
+          type: healthcheckDataType
+          example: !include ../examples/healthcheck-response-example.raml
