@@ -31,9 +31,6 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 	</secure-properties:config>
 	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="bdb6e818-49f3-49be-875b-ae2b2782e3d0" flowRef="wwj-salesforce-sapi-main" />
 	
-	<!-- 	<tls:context name="TLS_Context" doc:name="TLS Context" doc:id="25fb6ada-e17e-4519-8042-63d57468e318" >
-		<tls:key-store type="pkcs12" path="${certificates.keystore.path}" alias="${certificates.keystore.alias}" keyPassword="${secure::certificates.keystore.password}" password="${secure::certificates.keystore.password}" />
-	</tls:context> -->
 	<configuration doc:name="Configuration" doc:id="9a8827af-2939-4716-b40f-d169d3c18d2a" defaultErrorHandler-ref="GlobalOrgcSapiErrorHandler" />
    
 	<error-handler name="GlobalOrgcSapiErrorHandler" doc:id="ea90a112-c328-48d8-9f9c-d629a0bce4ad">
