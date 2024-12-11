@@ -10,11 +10,6 @@ listener:
     https: "8082"
     http: "8081"
 
-certificates:
-  keystore:
-    path: ""
-    alias: "wwj-prod-mule"
-
 anypoint.platform:
   client_id: ""
 

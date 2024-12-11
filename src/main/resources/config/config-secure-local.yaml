@@ -1,9 +1,5 @@
 anypoint.platform:
   client_secret: "![Jo2q9TY7jccF8vYGXSY44ESUbxP/dNn68wtgbHYfJlKmJDv+KSIlaQ==]"
-  
-certificates:
-  keystore:
-    password: "![qTpUPDTCWGvgg8YJXveBj0BA1JUPptHO]"
 
 rollbar:
   accesstoken: "![]"
